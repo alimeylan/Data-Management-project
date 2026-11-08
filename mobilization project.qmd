@@ -16,8 +16,7 @@ library(vroom)
 library(tidyr)
 ```
 
-
-#Cleaning the data
+# Cleaning the data
 
 ## First data Set : Harvard's mass mobilization
 
@@ -27,13 +26,12 @@ mass_mob<-vroom(here("data", "mmALL_073120_csv.csv"))
 
 Issues that have arisen : 
 - A lot of missing data N/A 
-- Start and end dates in a relatively complicated way (maybe we'll keep them that way and just add the dd/mm/yyyy version)
-- Inconsistent counting of protesters : from numbers to 1000s, +50 etc. and a tentative category that is incomplete. 
+- Start and end dates in a relatively complicated way (maybe we'll keep them that way and just add the dd/mm/yyyy version) 
+- Inconsistent counting of protesters : from numbers to 1000s, +50 etc. and a tentative category that is incomplete.
 
 ### Dates
-We can start by adding a column regrouping the dates' information 
-The goal is to get two additional columns : startdate and enddate. 
 
+We can start by adding a column regrouping the dates' information The goal is to get two additional columns : startdate and enddate.
 
 ```{r}
 mutate(mass_mob, 
@@ -42,9 +40,45 @@ mutate(mass_mob,
 ```
 
 
+### Counting 
 
+## Second Dataset : Harvard's non violent and violent campaigns and outcomes (NAVCO)
 
+This dataset was available to download in .xlsx format which seemed a bit too complicated to navigate for us, plus we also thought it would be simpler to have all our datasets in the same format.
 
+To convert to .csv we used an online converter (convertio).
+ 
+```{r}
+navco_df<- vroom(here("data", "NAVCO-1.3-List.csv"))
+```
+ Let's first notice there are only two variables in this dataset that as N/A values, each where they represent less that 1%. 
+ 
+## Third Dataset : ACLED's 
+ 
+## Fourth Dataset : Episodes of regime transformation
+
+```{r}
+ert_df<-vroom(here("data","ert.csv"))
+```
+
+In this dataset, many of the N/A values come from follow-up variables ie when there is before a binary variable such as democratization episode (dem_ep) and then if there is, what is its name (dem_ep_id). For obvious reason there isn't going to be a name if there isn't anything. So the value isn't missing, it's nothing. 
+
+to make for an easier to use dataset, we need probably need to delete some columns that only come in handy with less than 15% of the recorded events. 
+
+Instead, we could also separate the dataset in regards to if democratization or autocratization episodes were at play. 
+
+```{r}
+ert_auto <- ert_df |>
+  filter(aut_ep==1) |>
+  select(-dem_ep, -dem_ep_id, -dem_ep_start_year, -dem_ep_end_year, -dem_ep_termination, -dem_ep_prch, -dem_ep_ptr, -dem_ep_outcome, -dem_ep_outcome_agg, -dem_ep_censored, -dem_ep_subdep, -dem_pre_ep_year)
+```
+
+```{r}
+ert_dem <- ert_df |>
+  filter(dem_ep==1) |>
+  select(-aut_ep, -aut_ep_id, -aut_ep_start_year,-aut_ep_end_year,-aut_pre_ep_year, -aut_ep_termination, -aut_ep_prch, -aut_ep_pbr, -aut_ep_outcome, -aut_ep_outcome_agg, -aut_ep_censored, -aut_ep_subreg)
+
+```
 
 
 
