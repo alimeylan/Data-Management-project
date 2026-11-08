@@ -1,0 +1,22 @@
+---
+title: "Mobilization and Regime change"
+author: "Alice MEYLAN, Juliana CAPITANACHI GAUTHY"
+format: html
+---
+
+```{r}
+here::i_am("Data-Management-project.Rproj")
+library(here)
+```
+
+```{r}
+library(ggplot2)
+library(dplyr)
+library(vroom)
+library(tidyr)
+```
+
+```{r}
+mass_mob<-vroom(here("data", "mmALL_073120_csv.csv"))
+```
+
