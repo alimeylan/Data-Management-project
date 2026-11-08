@@ -16,7 +16,35 @@ library(vroom)
 library(tidyr)
 ```
 
+
+#Cleaning the data
+
+## First data Set : Harvard's mass mobilization
+
 ```{r}
 mass_mob<-vroom(here("data", "mmALL_073120_csv.csv"))
 ```
+
+Issues that have arisen : 
+- A lot of missing data N/A 
+- Start and end dates in a relatively complicated way (maybe we'll keep them that way and just add the dd/mm/yyyy version)
+- Inconsistent counting of protesters : from numbers to 1000s, +50 etc. and a tentative category that is incomplete. 
+
+### Dates
+We can start by adding a column regrouping the dates' information 
+The goal is to get two additional columns : startdate and enddate. 
+
+
+```{r}
+mutate(mass_mob, 
+       startdate=as.Date(paste(startyear,startmonth, startday, sep="-")),
+       enddate=as.Date(paste(endyear, endmonth, endday, sep = "-")))
+```
+
+
+
+
+
+
+
 
