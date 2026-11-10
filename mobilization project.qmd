@@ -24,10 +24,7 @@ library(tidyr)
 mass_mob<-vroom(here("data", "mmALL_073120_csv.csv"))
 ```
 
-Issues that have arisen : 
-- A lot of missing data N/A 
-- Start and end dates in a relatively complicated way (maybe we'll keep them that way and just add the dd/mm/yyyy version) 
-- Inconsistent counting of protesters : from numbers to 1000s, +50 etc. and a tentative category that is incomplete.
+Issues that have arisen : - A lot of missing data N/A - Start and end dates in a relatively complicated way (maybe we'll keep them that way and just add the dd/mm/yyyy version) - Inconsistent counting of protesters : from numbers to 1000s, +50 etc. and a tentative category that is incomplete.
 
 ### Dates
 
@@ -39,8 +36,7 @@ mutate(mass_mob,
        enddate=as.Date(paste(endyear, endmonth, endday, sep = "-")))
 ```
 
-
-### Counting 
+### Counting
 
 ## Second Dataset : Harvard's non violent and violent campaigns and outcomes (NAVCO)
 
@@ -48,31 +44,43 @@ This dataset was available to download in .xlsx format which seemed a bit too co
 
 To convert to .csv we used an online converter (Convertio).
 
- 
 ```{r}
 navco_df<- vroom(here("data", "NAVCO-1.3-List.csv"))
 ```
- Let's first notice there are only two variables in this dataset that as N/A values, each where they represent less that 1%. 
- 
-## Third Dataset : ACLED's 
+
+Let's first notice there are only two variables in this dataset that as N/A values, each where they represent less that 1%.
+
+## Third Dataset : ACLED's
 
 This dataset was also available to download as an excel file (.xlsx). Thus, following the same logic as for the NAVCO dataset, we used Convertio to convert it into a .csv file.
+
 ```{r}
 acled_df<- vroom(here("data", "acled.csv"))
+colnames(acled_df)
 ```
 
- 
+This data is already in a tidy format enabling us to clearly observe the evolution of the amount of demonstrations in each country accross the years.
+
+Out of curiosity and to obtain a better understanding of the dataset, let us look at the countries and years with the most demonstration events versus least.
+
+# Ten highest amounts of demonstrations in a year
+
+```{r}
+acled_df |>
+  slice_max(`EVENTS`, n=10)
+```
+
 ## Fourth Dataset : Episodes of regime transformation
 
 ```{r}
 ert_df<-vroom(here("data","ert.csv"))
 ```
 
-In this dataset, many of the N/A values come from follow-up variables ie when there is before a binary variable such as democratization episode (dem_ep) and then if there is, what is its name (dem_ep_id). For obvious reason there isn't going to be a name if there isn't anything. So the value isn't missing, it's nothing. 
+In this dataset, many of the N/A values come from follow-up variables ie when there is before a binary variable such as democratization episode (dem_ep) and then if there is, what is its name (dem_ep_id). For obvious reason there isn't going to be a name if there isn't anything. So the value isn't missing, it's nothing.
 
-to make for an easier to use dataset, we need probably need to delete some columns that only come in handy with less than 15% of the recorded events. 
+to make for an easier to use dataset, we need probably need to delete some columns that only come in handy with less than 15% of the recorded events.
 
-Instead, we could also separate the dataset in regards to if democratization or autocratization episodes were at play. 
+Instead, we could also separate the dataset in regards to if democratization or autocratization episodes were at play.
 
 ```{r}
 ert_auto <- ert_df |>
@@ -86,6 +94,3 @@ ert_dem <- ert_df |>
   select(-aut_ep, -aut_ep_id, -aut_ep_start_year,-aut_ep_end_year,-aut_pre_ep_year, -aut_ep_termination, -aut_ep_prch, -aut_ep_pbr, -aut_ep_outcome, -aut_ep_outcome_agg, -aut_ep_censored, -aut_ep_subreg)
 
 ```
-
-
-
