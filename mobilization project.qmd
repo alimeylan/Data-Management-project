@@ -105,7 +105,40 @@ acled_df |>
 ```
 The lowest amount of demonstrations that can be reached in a year, on the other hand, is zero. 
 
+### Graphical representation 
+To better understand the underlying trends of this dataset, let's plot the evolution of the amount of demonstrations over time. However, in order to do this, we need aggregate yearly data on the number of protests. 
+```{r}
+acled_df |>
+filter(!is.na(`YEAR`) & !is.na(`EVENTS`)) |>
+  group_by(YEAR) |>
+  summarise(average_events = mean(EVENTS)) |>
+  
+ggplot(aes(x = `YEAR`, y = `average_events`)) +
+geom_line()
+```
 
+However, this is not very informative because the amount of countries covered by this dataset also increased over time: 
+```{r}
+acled_df |>
+  filter(!is.na(YEAR), !is.na(COUNTRY)) |>
+  group_by(YEAR) |>
+   summarise(countries = n_distinct(COUNTRY))|>
+         
+ggplot(aes(x = `YEAR`, y = `countries`)) +
+geom_line()
+```
+Finally let's look at the countries with the highest average amount of protests over the period. 
+```{r}
+acled_df |>
+filter(!is.na(`YEAR`) & !is.na(`EVENTS`)) |>
+  group_by(COUNTRY) |>
+  summarise(average_events_by_country = mean(EVENTS)) |>
+  slice_max(average_events_by_country, n = 30) |>
+ggplot(aes(x = `COUNTRY`, y = `average_events_by_country`)) +
+geom_col()+
+coord_flip()
+```
+Once again, data to be analysed with caution beacause average data per country doesn't cover the same time frame. 
 
 ## Fourth Dataset : Episodes of regime transformation
 
