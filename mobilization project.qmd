@@ -64,10 +64,21 @@ This data is already in a tidy format enabling us to clearly observe the evoluti
 ### Description of the dataset
 
 #### Number of observations and variables 
-|                        |                      |
-|------------------------|----------------------|
-| Number of variables    | `{r} ncol(acled_df)` |
-| Number of observations | `{r} nrow(acled_df)` |
+```{r}
+
+number_of_countries <- dplyr::n_distinct(acled_df$COUNTRY)
+minimum <-  min(acled_df$YEAR)
+maximum <-  max(acled_df$YEAR)
+```
+
+|                        |                               |
+|------------------------|-------------------------------|
+| Number of variables    | `{r} ncol(acled_df)`          |
+| Number of observations | `{r} nrow(acled_df)`          |
+| Number of countries    | `{r} number_of_countries`     |
+| Earliest year          | `{r} minimum`                 |
+| Latest year            | `{r} maximum`                 |
+
 
 #### Types of variables 
 | Variables       | Type                                    
