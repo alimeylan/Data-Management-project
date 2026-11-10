@@ -63,7 +63,7 @@ This data is already in a tidy format enabling us to clearly observe the evoluti
 
 Out of curiosity and to obtain a better understanding of the dataset, let us look at the countries and years with the most demonstration events versus least.
 
-# Ten highest amounts of demonstrations in a year
+### Ten highest amounts of demonstrations in a year
 
 ```{r}
 acled_df |>
