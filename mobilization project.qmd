@@ -61,6 +61,29 @@ colnames(acled_df)
 
 This data is already in a tidy format enabling us to clearly observe the evolution of the amount of demonstrations in each country accross the years.
 
+### Description of the dataset
+
+#### Number of observations and variables 
+|                        |                      |
+|------------------------|----------------------|
+| Number of variables    | `{r} ncol(acled_df)` |
+| Number of observations | `{r} nrow(acled_df)` |
+
+#### Types of variables 
+| Variables       | Type                                    
+|-----------------|-----------------------------------------|
+| COUNTRY         | `{r} typeof(acled_df$COUNTRY)`          | 
+| YEAR            | `{r} typeof(acled_df$YEAR)`             |
+| EVENTS          | `{r} typeof(acled_df$EVENTS)`           |
+
+#### Variable description 
+| Variables       | Description 
+|-----------------|-----------------------------------------|
+| COUNTRY         | Country of observation                  | 
+| YEAR            | Year of observation                     | 
+| EVENTS          | Number of protests and violent demonstrations per country per year. This includes: Peaceful protests, Violent demonstration, Mob violence, Excessive force against protesters, Protest with intervention. | 
+
+
 Out of curiosity and to obtain a better understanding of the dataset, let us look at the countries and years with the most demonstration events versus least.
 
 ### Ten highest amounts of demonstrations in a year
@@ -69,6 +92,8 @@ Out of curiosity and to obtain a better understanding of the dataset, let us loo
 acled_df |>
   slice_max(`EVENTS`, n=10)
 ```
+
+
 
 ## Fourth Dataset : Episodes of regime transformation
 
