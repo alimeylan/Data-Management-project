@@ -46,7 +46,11 @@ mutate(mass_mob,
 
 This dataset was available to download in .xlsx format which seemed a bit too complicated to navigate for us, plus we also thought it would be simpler to have all our datasets in the same format.
 
+<<<<<<< HEAD
 To convert to .csv we used an online converter (convertio).
+=======
+To convert to .csv we used an online converter (Convertio).
+>>>>>>> 9f7904aff964f7ffdf2d9de6962c278858278fdd
  
 ```{r}
 navco_df<- vroom(here("data", "NAVCO-1.3-List.csv"))
@@ -54,6 +58,14 @@ navco_df<- vroom(here("data", "NAVCO-1.3-List.csv"))
  Let's first notice there are only two variables in this dataset that as N/A values, each where they represent less that 1%. 
  
 ## Third Dataset : ACLED's 
+<<<<<<< HEAD
+=======
+
+This dataset was also available to download as an excel file (.xlsx). Thus, following the same logic as for the NAVCO dataset, we used Convertio to convert it into a .csv file.
+```{r}
+acled_df<- vroom(here("data", "acled.csv"))
+```
+>>>>>>> 9f7904aff964f7ffdf2d9de6962c278858278fdd
  
 ## Fourth Dataset : Episodes of regime transformation
 
