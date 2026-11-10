@@ -103,6 +103,7 @@ Out of curiosity and to obtain a better understanding of the dataset, let us loo
 acled_df |>
   slice_max(`EVENTS`, n=10)
 ```
+The lowest amount of demonstrations that can be reached in a year, on the other hand, is zero. 
 
 
 
