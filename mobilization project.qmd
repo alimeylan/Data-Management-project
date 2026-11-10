@@ -1,9 +1,7 @@
 ---
 title: "Mobilization and Regime change"
 author: "Alice MEYLAN, Juliana CAPITANACHI GAUTHY"
-format:
-  revealjs:
-    echo: false
+format:  html
 ---
 
 ```{r}
