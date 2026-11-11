@@ -26,6 +26,43 @@ mass_mob<-vroom(here("data", "mmALL_073120_csv.csv"))
 
 Issues that have arisen : - A lot of missing data N/A - Start and end dates in a relatively complicated way (maybe we'll keep them that way and just add the dd/mm/yyyy version) - Inconsistent counting of protesters : from numbers to 1000s, +50 etc. and a tentative category that is incomplete.
 
+### Description of the dataset
+
+#### Number of observations and variables
+
+```{r}
+countries<- dplyr::n_distinct(mass_mob$country)
+earliest <- min(mass_mob$year)
+latest <-max(mass_mob$year)
+```
+
+
+|                         |                         |
+|-------------------------|-------------------------|
+| Number of variables     |   `{r} ncol(mass_mob)`  |
+| Number of observations  |   `{r} nrow(mass_mob)`  |
+| Number of countries     |   `{r} countries`       |
+| Earliest year           |   `{r} earliest`        | 
+| Latest year             |   `{r} latest`          |
+
+
+
+#### Types of variables
+
+As we can see above, this dataset contains 31 variables. We wont present each and every one of them but only those that seem relevant for our research. 
+
+| Variables | Type                           |
+|-----------|--------------------------------|
+|  id                    | `{r} typeof(mass_mob$id)` |
+|  country               | `{r} typeof(mass_mob$country)`    |
+| protestnumber          | `{r} typeof(mass_mob$protestnumber)`  |
+| protestviolence        | `{r} typeof(mass_mob$protestviolence)`  |
+|  participants_category | `{r} typeof(mass_mob$participants_category)`  |
+
+
+
+#### Variable description
+
 ### Dates
 
 We can start by adding a column regrouping the dates' information The goal is to get two additional columns : startdate and enddate.
@@ -63,7 +100,8 @@ This data is already in a tidy format enabling us to clearly observe the evoluti
 
 ### Description of the dataset
 
-#### Number of observations and variables 
+#### Number of observations and variables
+
 ```{r}
 
 number_of_countries <- dplyr::n_distinct(acled_df$COUNTRY)
@@ -71,29 +109,29 @@ minimum <-  min(acled_df$YEAR)
 maximum <-  max(acled_df$YEAR)
 ```
 
-|                        |                               |
-|------------------------|-------------------------------|
-| Number of variables    | `{r} ncol(acled_df)`          |
-| Number of observations | `{r} nrow(acled_df)`          |
-| Number of countries    | `{r} number_of_countries`     |
-| Earliest year          | `{r} minimum`                 |
-| Latest year            | `{r} maximum`                 |
+|                        |                           |
+|------------------------|---------------------------|
+| Number of variables    | `{r} ncol(acled_df)`      |
+| Number of observations | `{r} nrow(acled_df)`      |
+| Number of countries    | `{r} number_of_countries` |
+| Earliest year          | `{r} minimum`             |
+| Latest year            | `{r} maximum`             |
 
+#### Types of variables
 
-#### Types of variables 
-| Variables       | Type                                    
-|-----------------|-----------------------------------------|
-| COUNTRY         | `{r} typeof(acled_df$COUNTRY)`          | 
-| YEAR            | `{r} typeof(acled_df$YEAR)`             |
-| EVENTS          | `{r} typeof(acled_df$EVENTS)`           |
+| Variables | Type                           |
+|-----------|--------------------------------|
+| COUNTRY   | `{r} typeof(acled_df$COUNTRY)` |
+| YEAR      | `{r} typeof(acled_df$YEAR)`    |
+| EVENTS    | `{r} typeof(acled_df$EVENTS)`  |
 
-#### Variable description 
-| Variables       | Description 
-|-----------------|-----------------------------------------|
-| COUNTRY         | Country of observation                  | 
-| YEAR            | Year of observation                     | 
-| EVENTS          | Number of protests and violent demonstrations per country per year. This includes: Peaceful protests, Violent demonstration, Mob violence, Excessive force against protesters, Protest with intervention. | 
+#### Variable description
 
+| Variables | Description |
+|------------------------|-----------------------------------------------|
+| COUNTRY | Country of observation |
+| YEAR | Year of observation |
+| EVENTS | Number of protests and violent demonstrations per country per year. This includes: Peaceful protests, Violent demonstration, Mob violence, Excessive force against protesters, Protest with intervention. |
 
 Out of curiosity and to obtain a better understanding of the dataset, let us look at the countries and years with the most demonstration events versus least.
 
@@ -103,10 +141,13 @@ Out of curiosity and to obtain a better understanding of the dataset, let us loo
 acled_df |>
   slice_max(`EVENTS`, n=10)
 ```
-The lowest amount of demonstrations that can be reached in a year, on the other hand, is zero. 
 
-### Graphical representation 
-To better understand the underlying trends of this dataset, let's plot the evolution of the amount of demonstrations over time. However, in order to do this, we need aggregate yearly data on the number of protests. 
+The lowest amount of demonstrations that can be reached in a year, on the other hand, is zero.
+
+### Graphical representation
+
+To better understand the underlying trends of this dataset, let's plot the evolution of the amount of demonstrations over time. However, in order to do this, we need aggregate yearly data on the number of protests.
+
 ```{r}
 acled_df |>
 filter(!is.na(`YEAR`) & !is.na(`EVENTS`)) |>
@@ -117,7 +158,8 @@ ggplot(aes(x = `YEAR`, y = `average_events`)) +
 geom_line()
 ```
 
-However, this is not very informative because the amount of countries covered by this dataset also increased over time: 
+However, this is not very informative because the amount of countries covered by this dataset also increased over time:
+
 ```{r}
 acled_df |>
   filter(!is.na(YEAR), !is.na(COUNTRY)) |>
@@ -127,7 +169,9 @@ acled_df |>
 ggplot(aes(x = `YEAR`, y = `countries`)) +
 geom_line()
 ```
-Finally let's look at the countries with the highest average amount of protests over the period. 
+
+Finally let's look at the countries with the highest average amount of protests over the period.
+
 ```{r}
 acled_df |>
 filter(!is.na(`YEAR`) & !is.na(`EVENTS`)) |>
@@ -138,7 +182,8 @@ ggplot(aes(x = `COUNTRY`, y = `average_events_by_country`)) +
 geom_col()+
 coord_flip()
 ```
-Once again, data to be analysed with caution beacause average data per country doesn't cover the same time frame. 
+
+Once again, data to be analysed with caution beacause average data per country doesn't cover the same time frame.
 
 ## Fourth Dataset : Episodes of regime transformation
 
