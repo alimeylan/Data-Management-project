@@ -51,17 +51,29 @@ latest <-max(mass_mob$year)
 
 As we can see above, this dataset contains 31 variables. We wont present each and every one of them but only those that seem relevant for our research. 
 
-| Variables | Type                           |
-|-----------|--------------------------------|
-|  id                    | `{r} typeof(mass_mob$id)` |
-|  country               | `{r} typeof(mass_mob$country)`    |
-| protestnumber          | `{r} typeof(mass_mob$protestnumber)`  |
-| protestviolence        | `{r} typeof(mass_mob$protestviolence)`  |
-|  participants_category | `{r} typeof(mass_mob$participants_category)`  |
-
+| Variables              | Type                                          |
+|------------------------|-----------------------------------------------|
+|  id                    | `{r} typeof(mass_mob$id)`                     |
+|  country               | `{r} typeof(mass_mob$country)`                |
+| protestnumber          | `{r} typeof(mass_mob$protestnumber)`          |
+| protesterviolence      | `{r} typeof(mass_mob$protestviolence)`        |
+| participants_category  | `{r} typeof(mass_mob$participants_category)`  |
+| stateresponse1         | `{r} typeof(mass_mob$stateresponse1)`         |
 
 
 #### Variable description
+
+| Variables              | Description                                   |
+|------------------------|-----------------------------------------------|
+|  id                    |     unique protest identifier                 |
+|  country               |     Country of the protest                    |
+| protestnumber          |     Number of the protest in this year        |
+| protesterviolence      |     Whether the movement used violence        |
+| participants_category  |     Categories summarizing  the magnitude of the movement  |
+| stateresponse1         |     How the governing powers reacted to the protests   |
+
+
+### Protest = 0
 
 ### Dates
 
@@ -86,6 +98,53 @@ navco_df<- vroom(here("data", "NAVCO-1.3-List.csv"))
 ```
 
 Let's first notice there are only two variables in this dataset that as N/A values, each where they represent less that 1%.
+
+### Description of the dataset
+
+#### Number of observations and variables 
+
+```{r}
+countries<- dplyr::n_distinct(navco_df$LOCATION)
+earliest <- min(navco_df$BYEAR)
+latest <-max(navco_df$EYEAR)
+```
+
+
+|                         |                         |
+|-------------------------|-------------------------|
+| Number of variables     |   `{r} ncol(navco_df)`  |
+| Number of observations  |   `{r} nrow(navco_df)`  |
+| Number of countries     |   `{r} countries`       |
+| Earliest year           |   `{r} earliest`        | 
+| Latest year             |   `{r} latest`          |
+
+
+
+#### Types of variables
+
+| Variables              | Type                                          |
+|------------------------|-----------------------------------------------|
+|  NAVCOID               | `{r} typeof(navco_df$NAVCOID)`                |
+|  CAMPAIGN              | `{r} typeof(navco_df$CAMPAIGN)`               |
+|  LOCATION              | `{r} typeof(navco_df$LOCATION)`               |
+|  SUCCESS               | `{r} typeof(navco_df$SUCCESS)`                |
+|  FAILURE               | `{r} typeof(navco_df$FAILURE)`                |
+|  VIOL                  | `{r} typeof(navco_df$VIOL)`                   |
+|  NONVIOL               | `{r} typeof(navco_df$NONVIOL)`                |
+|  REGCHANGE             | `{r} typeof(navco_df$REGCHANGE)`              |
+
+#### Variable description
+
+| Variables              | Description                                   |
+|------------------------|-----------------------------------------------|
+|  NAVCOID               |                 |
+|  CAMPAIGN              |                |
+|  LOCATION              |                |
+|  SUCCESS               |                 |
+|  FAILURE               |                |
+|  VIOL                  |                   |
+|  NONVIOL               |                |
+|  REGCHANGE             |              |
 
 ## Third Dataset : ACLED's
 
