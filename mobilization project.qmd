@@ -321,3 +321,22 @@ maximum_yr_ert <-  max(ert_df_clean$year)
 | Number of countries    | `{r} number_of_countries` |
 | Earliest year          | `{r} minimum_yr_ert`      |
 | Latest year            | `{r} maximum_yr_ert`      |
+
+Given that our goal is to merge our four datasets into one general database, our datasets have to cover the same timespan. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1997-2019. Thus, I further restrict my database: 
+
+```{r}
+ert_df_clean <- ert_df_clean |>
+  filter(year >= 1997, year <= 2019)
+```
+
+Our new number of observsations is: 
+
+|                        |                           |
+|------------------------|---------------------------|
+| Number of observations | `{r} nrow(ert_df_clean)`  |
+| Earliest year          | 1997 |
+| Latest year            | 2019    |
+
+
+
+
