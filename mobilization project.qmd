@@ -176,21 +176,13 @@ maximum <-  max(acled_df$YEAR)
 | Earliest year          | `{r} minimum`             |
 | Latest year            | `{r} maximum`             |
 
-#### Types of variables
+#### Type and description of variables 
 
-| Variables | Type                           |
-|-----------|--------------------------------|
-| COUNTRY   | `{r} typeof(acled_df$COUNTRY)` |
-| YEAR      | `{r} typeof(acled_df$YEAR)`    |
-| EVENTS    | `{r} typeof(acled_df$EVENTS)`  |
-
-#### Variable description
-
-| Variables | Description |
-|------------------------|-----------------------------------------------|
-| COUNTRY | Country of observation |
-| YEAR | Year of observation |
-| EVENTS | Number of protests and violent demonstrations per country per year. This includes: Peaceful protests, Violent demonstration, Mob violence, Excessive force against protesters, Protest with intervention. |
+| Variables | Type                           |Description |
+|-----------|--------------------------------|-------------|
+| COUNTRY   | `{r} typeof(acled_df$COUNTRY)` |Country of observation |
+| YEAR      | `{r} typeof(acled_df$YEAR)`    |Year of observation |
+| EVENTS    | `{r} typeof(acled_df$EVENTS)`  |Number of protests and violent demonstrations per country per year. This includes: Peaceful protests, Violent demonstration, Mob violence, Excessive force against protesters, Protest with intervention. |
 
 Out of curiosity and to obtain a better understanding of the dataset, let us look at the countries and years with the most demonstration events versus least.
 
@@ -329,13 +321,23 @@ ert_df_clean <- ert_df_clean |>
   filter(year >= 1997, year <= 2019)
 ```
 
-Our new number of observsations is: 
+Our new number of observations is: 
 
 |                        |                           |
 |------------------------|---------------------------|
 | Number of observations | `{r} nrow(ert_df_clean)`  |
-| Earliest year          | 1997 |
-| Latest year            | 2019    |
+| Earliest year          | 1997                      |
+| Latest year            | 2019                      |
+
+
+### Graphical representation 
+```{r}
+ert_df_clean |>
+  filter(row_regch_event != 0) |>
+  ggplot(aes(x = year, fill = factor(row_regch_event))) +
+  geom_bar()
+```
+
 
 
 
