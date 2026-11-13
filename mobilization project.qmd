@@ -148,6 +148,8 @@ latest <-max(navco_df$EYEAR)
 
 ## Third Dataset : ACLED's
 
+This dataset contains information on the number of protests and violent demonstrations per country per year. 
+
 This dataset was also available to download as an excel file (.xlsx). Thus, following the same logic as for the NAVCO dataset, we used Convertio to convert it into a .csv file.
 
 ```{r}
@@ -330,13 +332,8 @@ Our new number of observations is:
 | Latest year            | 2019                      |
 
 
-### Graphical representation 
-```{r}
-ert_df_clean |>
-  filter(row_regch_event != 0) |>
-  ggplot(aes(x = year, fill = factor(row_regch_event))) +
-  geom_bar()
-```
+
+
 
 
 
