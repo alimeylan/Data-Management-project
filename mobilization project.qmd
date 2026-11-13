@@ -307,3 +307,17 @@ ert_df_clean <- ert_df_clean |>
   )
 ```
 
+Our modified dataset has the following characteristics: 
+```{r}
+number_of_countries <- dplyr::n_distinct(ert_df_clean$country_id)
+minimum_yr_ert <-  min(ert_df_clean$year)
+maximum_yr_ert <-  max(ert_df_clean$year)
+```
+
+|                        |                           |
+|------------------------|---------------------------|
+| Number of variables    | `{r} ncol(ert_df_clean)`  |
+| Number of observations | `{r} nrow(ert_df_clean)`  |
+| Number of countries    | `{r} number_of_countries` |
+| Earliest year          | `{r} minimum_yr_ert`      |
+| Latest year            | `{r} maximum_yr_ert`      |
