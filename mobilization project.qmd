@@ -294,3 +294,14 @@ ert_df_clean <- ert_df |>
   select(country_id, country_text_id, country_name, year,v2x_regime, reg_type, v2x_polyarchy, row_regch_event, reg_trans, reg_start_year, dem_ep, dem_ep_start_year, aut_ep, aut_ep_start_year) 
 ```
 Note that the large portion of NA for the dem_ep_start_year and aut_ep_start_year indicate "non applicable" observations, i.e. that there is no episode associated with this particular observation. 
+
+Further, as our goal is to determine whether mass mobilization leads to changes in political regimes. Thus, we must modify the dem_ep and aut_ep variables so that they indicate the year the democratization or autocratization episode begins, as opposed to every year it lasts. These variables are particularly interesting for out analysis as they capture the movements towards or away from democratization/autocratization, without necessarily implying a regime switch (which are more rare).
+
+```{r}
+ert_df_clean <- ert_df_clean |>
+  mutate(
+    dem_ep_new = dem_ep == 1 & year == dem_ep_start_year,
+    aut_ep_new = aut_ep == 1 & year == aut_ep_start_year
+  )
+```
+
