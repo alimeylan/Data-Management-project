@@ -269,6 +269,7 @@ ert_dem <- ert_df |>
 
 ```
 
+### Dataset and variable description 
 The ert_dem dataset identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. With the ultimate objective being to determine whether  mass mobilization leads to political regime changes, we select a series of variables from this dataset whch will be useful for our analysis: 
 
 | Variables | Description | Type        |
@@ -288,6 +289,7 @@ The ert_dem dataset identifies episodes of democratization and autocratization i
 | aut_ep | Whether there is an ongoing autocratization episode during the year in that country. |`{r} typeof(ert_df$aut_ep)`(dummy [0,1])|
 | aut_ep_start_year | Determines the year the autocratization episode began. |`{r} typeof(ert_df$aut_ep_start_year)` (year, [1905,2025])|
 
+### Cleaning the dataset and variable modification: 
 The rest of the variables contained in the dataset are removed. This includes: episode description variables and outcome variables, the new dataset is called ert_df_clean: 
 ```{r}
 ert_df_clean <- ert_df |>
