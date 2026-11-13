@@ -275,7 +275,7 @@ The ert_dem dataset identifies episodes of democratization and autocratization i
 |-----------|-------------|-------------|
 | country_id | V-Dem country identifier. | `{r} typeof(ert_df$country_id)` (integer, [3,236])|
 | country_text_id | V-Dem country identifier in text. |`{r} typeof(ert_df$country_text_id)`|
-| country_names | Full V-Dem country name. |`{r} typeof(ert_df$country_names)`|
+| country_name | Full V-Dem country name. |`{r} typeof(ert_df$country_names)`|
 | year | Year of observation. |`{r} typeof(ert_df$year)` (integer, [1900,2025])|
 | v2x_regime | The regime type for the country-year according to Regimes of the World (4 values). |`{r} typeof(ert_df$v2x_regime)` (0 - closed autocracy, 1 - electoral autocracy, 2 - electoral democracy, 3 - liberal democracy) |
 | reg_type | Classifies whether the regime in that country-year is a democracy or autocracy. | `{r} typeof(ert_df$reg_type)` (0 - autocracy, 1 - democracy)|
@@ -287,3 +287,10 @@ The ert_dem dataset identifies episodes of democratization and autocratization i
 | dem_ep_start_year | Determines the year the democratic episode began. |`{r} typeof(ert_df$dem_ep_start_year)` (year, [1901,2025])|
 | aut_ep | Whether there is an ongoing autocratization episode during the year in that country. |`{r} typeof(ert_df$aut_ep)`(dummy [0,1])|
 | aut_ep_start_year | Determines the year the autocratization episode began. |`{r} typeof(ert_df$aut_ep_start_year)` (year, [1905,2025])|
+
+The rest of the variables contained in the dataset are removed. This includes: episode description variables and outcome variables, the new dataset is called ert_df_clean: 
+```{r}
+ert_df_clean <- ert_df |>
+  select(country_id, country_text_id, country_name, year,v2x_regime, reg_type, v2x_polyarchy, row_regch_event, reg_trans, reg_start_year, dem_ep, dem_ep_start_year, aut_ep, aut_ep_start_year) 
+```
+Note that the large portion of NA for the dem_ep_start_year and aut_ep_start_year indicate "non applicable" observations, i.e. that there is no episode associated with this particular observation. 
