@@ -76,11 +76,21 @@ As we can see above, this dataset contains 31 variables. We wont present each an
 | stateresponse1         |     How the governing powers reacted to the protests   |
 
 
-### Correcting the dates
+### Creating a clean version
 
-We can create a new dataset trying to go around all the NA cells and non ergonic sides of the dataset
+We can create a new dataset trying to go around all the NA cells and non ergonomic sides of the dataset. 
 
 We can start by adding a column regrouping the dates' information The goal is to get two additional columns : startdate and enddate.
+
+We can also take of the particpants category because it is unusable and might not be relevant to our research. 
+
+The counting in this dataset is far from optimal, and there was also the option that a protest = 0, only reporting that there were no mass mobilization that year in this country. 
+
+```{r}
+filter(mass_mob, protest==0)|>
+  nrow()
+```
+This is the number of rows where there was no protests in the country. We can take this line off. 
 
 ```{r}
 mm_clean <- mass_mob |>
@@ -91,16 +101,6 @@ mm_clean <- mass_mob |>
   
 ```
 
-
-### Issues to consider 
-
-The counting in this dataset is far from optimal, and there is also the option that a protest = 0, only reporting that there were no mass mobilization that year in this country. 
-
-```{r}
-filter(mass_mob, protest==0)|>
-  nrow()
-```
-This is the number of rows where there was no protests in the country. 
 
 ### Graphical representations 
 
