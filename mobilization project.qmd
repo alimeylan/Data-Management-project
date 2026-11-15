@@ -73,8 +73,6 @@ As we can see above, this dataset contains 31 variables. We wont present each an
 | stateresponse1         |     How the governing powers reacted to the protests   |
 
 
-### Protest = 0
-
 ### Dates
 
 We can start by adding a column regrouping the dates' information The goal is to get two additional columns : startdate and enddate.
@@ -85,7 +83,61 @@ mutate(mass_mob,
        enddate=as.Date(paste(endyear, endmonth, endday, sep = "-")))
 ```
 
-### Counting
+
+### Issues to consider 
+
+The counting in this dataset is far from optimal, and there is also the option that a protest = 0, only reporting that there were no mass mobilization that year in this country. 
+
+```{r}
+filter(mass_mob, protest==0)|>
+  nrow()
+```
+This is the number of rows where there was no protests in the country. 
+
+### Graphical representations 
+
+Let's try to get an idea of the data in this dataframe, although, the qunatity of NA data might interfere. 
+
+#### Countries with the most mobilizations
+
+
+
+```{r}
+mass_mob|>
+  summarise(nbprotest=sum(protest), .by = country)|>
+  slice_max(nbprotest, n=15) |>
+  ggplot(aes(x=reorder(country,nbprotest), y=nbprotest))+
+  geom_col()+
+  coord_flip()+
+  labs(x="Number of protests", y="Countries")
+```
+
+
+#### Countries with the least mobilizations
+
+```{r}
+mass_mob|>
+  summarise(nbprotest=sum(protest), .by = country)|>
+  slice_min(nbprotest, n=15) |>
+  ggplot(aes(x=reorder(country,nbprotest, decreasing=TRUE), y=nbprotest))+
+  geom_col()+
+  coord_flip() +
+  labs(x="Number of protests", y="Countries")
+```
+
+#### Countries with most violent protests 
+
+```{r}
+mass_mob|>
+  filter(protesterviolence==1)|>
+  summarise(nbprotest=sum(protest), .by = country)|>
+  slice_max(nbprotest, n=15) |>
+  ggplot(aes(x=reorder(country,nbprotest), y=nbprotest))+
+  geom_col()+
+  coord_flip()+
+  labs(x="Number of protests", y="Countries")
+```
+
 
 ## Second Dataset : Harvard's non violent and violent campaigns and outcomes (NAVCO)
 
@@ -137,14 +189,20 @@ latest <-max(navco_df$EYEAR)
 
 | Variables              | Description                                   |
 |------------------------|-----------------------------------------------|
-|  NAVCOID               |                 |
-|  CAMPAIGN              |                |
-|  LOCATION              |                |
-|  SUCCESS               |                 |
-|  FAILURE               |                |
-|  VIOL                  |                   |
-|  NONVIOL               |                |
-|  REGCHANGE             |              |
+|  NAVCOID               |  Unique number of the protest                 |
+|  CAMPAIGN              |  The context/revendications of the protests   |
+|  LOCATION              |  Country of the protest                       |
+|  SUCCESS               |  If it was succesful                          |
+|  FAILURE               |  If it wasn't successful                      |
+|  VIOL                  |  Whether the protest was violent              |
+|  NONVIOL               |  Whether the protest was nonviolent           |
+|  REGCHANGE             |  Did the protest end up in a Regime change    |
+
+
+It could be interesting to alleviate the datasets in order to get more comprehensive datasets with less NA data.
+For example, here we could remove one of the VIOL or NONVIOL variable as they are complementary : when VIOL=1, NONVIOL=0 and vice versa. 
+
+
 
 ## Third Dataset : ACLED's
 
@@ -246,8 +304,6 @@ ert_df<-vroom(here("data","ert.csv"))
 
 In this dataset, many of the N/A values come from follow-up variables ie when there is before a binary variable such as democratization episode (dem_ep) and then if there is, what is its name (dem_ep_id). For obvious reason there isn't going to be a name if there isn't anything. So the value isn't missing, it's nothing.
 
-to make for an easier to use dataset, we need probably need to delete some columns that only come in handy with less than 15% of the recorded events.
-
 Instead, we could also separate the dataset in regards to if democratization or autocratization episodes were at play.
 
 ```{r}
@@ -264,7 +320,8 @@ ert_dem <- ert_df |>
 ```
 
 ### Dataset and variable description 
-The ert_dem dataset identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. With the ultimate objective being to determine whether  mass mobilization leads to political regime changes, we select a series of variables from this dataset whch will be useful for our analysis: 
+
+The ert_dem dataset identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. With the ultimate objective being to determine whether  mass mobilization leads to political regime changes, we select a series of variables from this dataset which will be useful for our analysis: 
 
 | Variables | Description | Type        |
 |-----------|-------------|-------------|
@@ -284,6 +341,7 @@ The ert_dem dataset identifies episodes of democratization and autocratization i
 | aut_ep_start_year | Determines the year the autocratization episode began. |`{r} typeof(ert_df$aut_ep_start_year)` (year, [1905,2025])|
 
 ### Cleaning the dataset and variable modification: 
+
 The rest of the variables contained in the dataset are removed. This includes: episode description variables and outcome variables, the new dataset is called ert_df_clean: 
 ```{r}
 ert_df_clean <- ert_df |>
@@ -330,12 +388,4 @@ Our new number of observations is:
 | Number of observations | `{r} nrow(ert_df_clean)`  |
 | Earliest year          | 1997                      |
 | Latest year            | 2019                      |
-
-
-
-
-
-
-
-
 
