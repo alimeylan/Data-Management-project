@@ -148,6 +148,8 @@ latest <-max(navco_df$EYEAR)
 
 ## Third Dataset : ACLED's
 
+This dataset contains information on the number of protests and violent demonstrations per country per year. 
+
 This dataset was also available to download as an excel file (.xlsx). Thus, following the same logic as for the NAVCO dataset, we used Convertio to convert it into a .csv file.
 
 ```{r}
@@ -176,21 +178,13 @@ maximum <-  max(acled_df$YEAR)
 | Earliest year          | `{r} minimum`             |
 | Latest year            | `{r} maximum`             |
 
-#### Types of variables
+#### Type and description of variables 
 
-| Variables | Type                           |
-|-----------|--------------------------------|
-| COUNTRY   | `{r} typeof(acled_df$COUNTRY)` |
-| YEAR      | `{r} typeof(acled_df$YEAR)`    |
-| EVENTS    | `{r} typeof(acled_df$EVENTS)`  |
-
-#### Variable description
-
-| Variables | Description |
-|------------------------|-----------------------------------------------|
-| COUNTRY | Country of observation |
-| YEAR | Year of observation |
-| EVENTS | Number of protests and violent demonstrations per country per year. This includes: Peaceful protests, Violent demonstration, Mob violence, Excessive force against protesters, Protest with intervention. |
+| Variables | Type                           |Description |
+|-----------|--------------------------------|-------------|
+| COUNTRY   | `{r} typeof(acled_df$COUNTRY)` |Country of observation |
+| YEAR      | `{r} typeof(acled_df$YEAR)`    |Year of observation |
+| EVENTS    | `{r} typeof(acled_df$EVENTS)`  |Number of protests and violent demonstrations per country per year. This includes: Peaceful protests, Violent demonstration, Mob violence, Excessive force against protesters, Protest with intervention. |
 
 Out of curiosity and to obtain a better understanding of the dataset, let us look at the countries and years with the most demonstration events versus least.
 
@@ -268,3 +262,80 @@ ert_dem <- ert_df |>
   select(-aut_ep, -aut_ep_id, -aut_ep_start_year,-aut_ep_end_year,-aut_pre_ep_year, -aut_ep_termination, -aut_ep_prch, -aut_ep_pbr, -aut_ep_outcome, -aut_ep_outcome_agg, -aut_ep_censored, -aut_ep_subreg)
 
 ```
+
+### Dataset and variable description 
+The ert_dem dataset identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. With the ultimate objective being to determine whether  mass mobilization leads to political regime changes, we select a series of variables from this dataset whch will be useful for our analysis: 
+
+| Variables | Description | Type        |
+|-----------|-------------|-------------|
+| country_id | V-Dem country identifier. | `{r} typeof(ert_df$country_id)` (integer, [3,236])|
+| country_text_id | V-Dem country identifier in text. |`{r} typeof(ert_df$country_text_id)`|
+| country_name | Full V-Dem country name. |`{r} typeof(ert_df$country_names)`|
+| year | Year of observation. |`{r} typeof(ert_df$year)` (integer, [1900,2025])|
+| v2x_regime | The regime type for the country-year according to Regimes of the World (4 values). |`{r} typeof(ert_df$v2x_regime)` (0 - closed autocracy, 1 - electoral autocracy, 2 - electoral democracy, 3 - liberal democracy) |
+| reg_type | Classifies whether the regime in that country-year is a democracy or autocracy. | `{r} typeof(ert_df$reg_type)` (0 - autocracy, 1 - democracy)|
+| v2x_polyarchy | Gives the country's score on the Electoral Democracy Index (EDI, V-DEM) in that year. |`{r} typeof(ert_df$v2x_polyarchy)` (interval [0,1])|
+| row_regch_event | Measures whether there was a regime change in that country-year according to Regimes of the World (not necessarily "genuine" = followed by elections) |`{r} typeof(ert_df$row_regch_event)` (-1 - change from democracy to autocracy, 0 - no regime change, 1 - change from autocracy to democracy) |
+| reg_trans |Measures whether there was a "genuine" regime change in that country-year.  |`{r} typeof(ert_df$reg_trans)` (-1 - democratic breakdown, 0 - no regime, 1 - democratic transition)|
+| reg_start_year,  | Determines the year a regime was founded (needed for the reg_type). |`{r} typeof(ert_df$reg_start_year)` (year, [1900,2025])|
+| dem_ep | Whether there is an ongoing democratic episode during the year in that country. |`{r} typeof(ert_df$dem_ep)` (dummy [0,1])|
+| dem_ep_start_year | Determines the year the democratic episode began. |`{r} typeof(ert_df$dem_ep_start_year)` (year, [1901,2025])|
+| aut_ep | Whether there is an ongoing autocratization episode during the year in that country. |`{r} typeof(ert_df$aut_ep)`(dummy [0,1])|
+| aut_ep_start_year | Determines the year the autocratization episode began. |`{r} typeof(ert_df$aut_ep_start_year)` (year, [1905,2025])|
+
+### Cleaning the dataset and variable modification: 
+The rest of the variables contained in the dataset are removed. This includes: episode description variables and outcome variables, the new dataset is called ert_df_clean: 
+```{r}
+ert_df_clean <- ert_df |>
+  select(country_id, country_text_id, country_name, year,v2x_regime, reg_type, v2x_polyarchy, row_regch_event, reg_trans, reg_start_year, dem_ep, dem_ep_start_year, aut_ep, aut_ep_start_year) 
+```
+Note that the large portion of NA for the dem_ep_start_year and aut_ep_start_year indicate "non applicable" observations, i.e. that there is no episode associated with this particular observation. 
+
+Further, as our goal is to determine whether mass mobilization leads to changes in political regimes. Thus, we must modify the dem_ep and aut_ep variables so that they indicate the year the democratization or autocratization episode begins, as opposed to every year it lasts. These variables are particularly interesting for out analysis as they capture the movements towards or away from democratization/autocratization, without necessarily implying a regime switch (which are more rare).
+
+```{r}
+ert_df_clean <- ert_df_clean |>
+  mutate(
+    dem_ep_new = dem_ep == 1 & year == dem_ep_start_year,
+    aut_ep_new = aut_ep == 1 & year == aut_ep_start_year
+  )
+```
+
+Our modified dataset has the following characteristics: 
+```{r}
+number_of_countries <- dplyr::n_distinct(ert_df_clean$country_id)
+minimum_yr_ert <-  min(ert_df_clean$year)
+maximum_yr_ert <-  max(ert_df_clean$year)
+```
+
+|                        |                           |
+|------------------------|---------------------------|
+| Number of variables    | `{r} ncol(ert_df_clean)`  |
+| Number of observations | `{r} nrow(ert_df_clean)`  |
+| Number of countries    | `{r} number_of_countries` |
+| Earliest year          | `{r} minimum_yr_ert`      |
+| Latest year            | `{r} maximum_yr_ert`      |
+
+Given that our goal is to merge our four datasets into one general database, our datasets have to cover the same timespan. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1997-2019. Thus, I further restrict my database: 
+
+```{r}
+ert_df_clean <- ert_df_clean |>
+  filter(year >= 1997, year <= 2019)
+```
+
+Our new number of observations is: 
+
+|                        |                           |
+|------------------------|---------------------------|
+| Number of observations | `{r} nrow(ert_df_clean)`  |
+| Earliest year          | 1997                      |
+| Latest year            | 2019                      |
+
+
+
+
+
+
+
+
+
