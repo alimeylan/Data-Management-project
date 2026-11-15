@@ -4,6 +4,9 @@ author: "Alice MEYLAN, Juliana CAPITANACHI GAUTHY"
 format:  html
 ---
 
+
+
+
 ```{r}
 #| message: false
 here::i_am("Data-Management-project.Rproj")
@@ -21,6 +24,8 @@ library(tidyr)
 
 
 # First data Set : Harvard's mass mobilization
+
+This Harvard datasets describes about 15 thousands mass mobilization from all over the world, trying to take into account the number of protesters, their violence, demands and the response they got. 
 
 ```{r}
 #| message: false
@@ -147,6 +152,8 @@ mass_mob|>
 
 
 # Second Dataset : Harvard's non violent and violent campaigns and outcomes (NAVCO)
+
+This datasets describes 622 campaigns and simply look at if they were violent or not, a success or not and finally if they ended with a regime change. 
 
 This dataset was available to download in .xlsx format which seemed a bit too complicated to navigate for us, plus we also thought it would be simpler to have all our datasets in the same format.
 
