@@ -78,12 +78,17 @@ As we can see above, this dataset contains 31 variables. We wont present each an
 
 ### Correcting the dates
 
+We can create a new dataset trying to go around all the NA cells and non ergonic sides of the dataset
+
 We can start by adding a column regrouping the dates' information The goal is to get two additional columns : startdate and enddate.
 
 ```{r}
-mutate(mass_mob, 
-       startdate=as.Date(paste(startyear,startmonth, startday, sep="-")),
-       enddate=as.Date(paste(endyear, endmonth, endday, sep = "-")))
+mm_clean <- mass_mob |>
+  filter(protest==1) |>
+  mutate(startdate=as.Date(paste(startyear,startmonth, startday, sep="-")),
+       enddate=as.Date(paste(endyear, endmonth, endday, sep = "-"))) |>
+  select(id, country, ccode, year, region, protestnumber, startyear, startdate, endyear,enddate, protesterviolence, protesterdemand1, stateresponse1)
+  
 ```
 
 
