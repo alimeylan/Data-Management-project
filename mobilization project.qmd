@@ -101,7 +101,6 @@ Let's try to get an idea of the data in this dataframe, although, the qunatity o
 #### Countries with the most mobilizations
 
 
-
 ```{r}
 mass_mob|>
   summarise(nbprotest=sum(protest), .by = country)|>
@@ -202,6 +201,32 @@ latest <-max(navco_df$EYEAR)
 It could be interesting to alleviate the datasets in order to get more comprehensive datasets with less NA data.
 For example, here we could remove one of the VIOL or NONVIOL variable as they are complementary : when VIOL=1, NONVIOL=0 and vice versa. 
 
+### Graphical Representations
+
+#### Countries where protests were the most successful
+
+```{r}
+navco_df |> 
+  summarise(successes=sum(SUCCESS), .by = LOCATION)|>
+  slice_max(successes,n=10)|>
+  ggplot(aes(x=reorder(LOCATION, successes), y = successes)) +
+  geom_col()+
+  coord_flip()+
+  labs(x="successes", y="Countries")
+```
+
+
+#### Average successes in the past years
+
+```{r}
+navco_df |>
+  summarise(yearly_successes=sum(SUCCESS), .by = EYEAR)|>
+  ggplot(aes(x=EYEAR, y=yearly_successes))+
+  geom_line()+
+  geom_point()+
+  scale_x_continuous(breaks = seq(1902, 2019, by =10)) 
+  
+```
 
 
 ## Third Dataset : ACLED's
