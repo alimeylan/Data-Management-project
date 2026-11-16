@@ -331,6 +331,17 @@ Our new number of observations is:
 | Earliest year          | 1997                      |
 | Latest year            | 2019                      |
 
+### Graphical representation 
+```{r}
+ert_df_clean |>
+  filter(row_regch_event != 0) |>
+  ggplot(aes(x = year, fill = factor(row_regch_event))) +
+  geom_bar() + 
+  scale_fill_discrete(labels = c("Shift to autocracy", "Shift to democracy")) +
+  labs(x = "Year", y = "Number of regime changes", fill = "Regime change")
+```
+This bar chart shows the number of regimes changes per year across all countries in the sample. The blue portion of the bars quantify the amount of changes from an autocracy to a democracy while the red portions show the amount of changes from a democracy to an autocracy. There is no particular noticeable pattern in the data.
+
 
 
 

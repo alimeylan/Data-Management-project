@@ -463,6 +463,7 @@ dbl (13): NAVCOID, BYEAR, EYEAR, SUCCESS, LIMITED, FAILURE, ONGOING, VIOL, N...
 </section>
 <section id="third-dataset-acleds" class="level2">
 <h2 class="anchored" data-anchor-id="third-dataset-acleds">Third Dataset : ACLED’s</h2>
+<p>This dataset contains information on the number of protests and violent demonstrations per country per year.</p>
 <p>This dataset was also available to download as an excel file (.xlsx). Thus, following the same logic as for the NAVCO dataset, we used Convertio to convert it into a .csv file.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>acled_df<span class="ot">&lt;-</span> <span class="fu">vroom</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"acled.csv"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -826,7 +827,9 @@ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>ert_df_clean <span class="sc">|&gt;</span></span>
 <span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(row_regch_event <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
 <span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">fill =</span> <span class="fu">factor</span>(row_regch_event))) <span class="sc">+</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span> </span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Shift to autocracy"</span>, <span class="st">"Shift to democracy"</span>)) <span class="sc">+</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Number of regime changes"</span>, <span class="at">fill =</span> <span class="st">"Regime change"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -835,6 +838,7 @@ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 </div>
 </div>
 </div>
+<p>This bar chart shows the number of regimes changes per year across all countries in the sample. The blue portion of the bars quantify the amount of changes from an autocracy to a democracy while the red portions show the amount of changes from a democracy to an autocracy. There is no particular noticeable pattern in the data.</p>
 </section>
 </section>
 </section>
