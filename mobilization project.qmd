@@ -4,23 +4,64 @@ author: "Alice MEYLAN, Juliana CAPITANACHI GAUTHY"
 format:  html
 ---
 
+# Presenting our tentative research question and datasets
+
+France has been seeing protests blossom for the last 3 months, first from high schoolers then students and finally these protests welcomed the gilets jaunes and demands about the cost of living.
+
+Violence has been a topic for these 3 months at protesters have been accused of making usage of it as well as police officers. Some demands are vividly critiquing the government and people holding power. More than a million people have been in the streets protesting, some of them asking for new kind of government. As it doesn't seem to be coming, we are wondering on the conditions that make for regime change, for protesters being listened to.
+
+Seeing the current situation in France and the fact that our master is pretty politicized, we have been wondering about different collective actions and their impact. This question also touches on violence and its impact on the response.To study that there are multiple ways and variables we could look for and try to analyse.
+
+Stopping to protests and mass mobilization is a choice as they are not the only ways to express discontentment, analysing the results of boycott could be interesting as well, or petitions too. We could try to compare different collective action tools that are possible and that have been studied and/or used in the past.
+
+Moreover, we also wish to put that in relation to the kind of regime these protests are opposing, are they democracies, autocracies, slipping from one to the other ? Is the regime using violence against the protesters ?
+
+It would be interesting to study and see which regime is more likely to see protests emerge. And how they respond to the demands
+
+Finally, we could study the different end scenarios ad even wonder which protests ended up with a regime change ? And how ?
+
+In this project, we would like to try to answer the question :
+
+**Does mass mobilization lead to political regime changes, and to what extent are these results impacted by the nature of the mobilization (violent or non-violent)?**
+
+
+
+Looking for datasets on this topic was interesting and we found that Harvard produced two on the subject, along with pdf files explaining their approach and variables. 
+
+The first on is called **mass mobilization**. In this data set, they focus on mobilization against standing powers, government.That way, they also include the response opposed to these mobilizations.
+Here, mass mobilization corresponds to at least 50 persons. They used four major newspapers to base their research and they made the choice to exclude protests stemming from foreign policies or religious community. 
+
+The second Harvard dataset is called **NAVCO,for violent and non violent campaigns and outcome**. This data set offers informations that differ from the mass mobilization set. It specifies more context on the campaign and an array of binary variables. It covers data starting from 1900. And they intend to focus on maximalist campaigns, looking to overthrow governments or expel foreign military,separatism, self determination. 
+
+Then, we're using ACLED's data set 
+
+Finally, we have de **Episode of regime transformation** data set. This data set is truly filled to the brim with useful and precise info. 
+
+
+
+
+# Loading necessary things
+
 ```{r}
+#| message: false
 here::i_am("Data-Management-project.Rproj")
 library(here)
 ```
 
 ```{r}
+#| message: false
 library(ggplot2)
 library(dplyr)
 library(vroom)
 library(tidyr)
 ```
 
-# Cleaning the data
+# First data Set : Harvard's mass mobilization
 
-## First data Set : Harvard's mass mobilization
+This Harvard datasets describes about 15 thousands mass mobilization from all over the world, trying to take into account the number of protesters, their violence, demands and the response they got.
 
 ```{r}
+#| message: false
 mass_mob<-vroom(here("data", "mmALL_073120_csv.csv"))
 ```
 
@@ -36,72 +77,123 @@ earliest <- min(mass_mob$year)
 latest <-max(mass_mob$year)
 ```
 
-
-|                         |                         |
-|-------------------------|-------------------------|
-| Number of variables     |   `{r} ncol(mass_mob)`  |
-| Number of observations  |   `{r} nrow(mass_mob)`  |
-| Number of countries     |   `{r} countries`       |
-| Earliest year           |   `{r} earliest`        | 
-| Latest year             |   `{r} latest`          |
-
-
+|                        |                      |
+|------------------------|----------------------|
+| Number of variables    | `{r} ncol(mass_mob)` |
+| Number of observations | `{r} nrow(mass_mob)` |
+| Number of countries    | `{r} countries`      |
+| Earliest year          | `{r} earliest`       |
+| Latest year            | `{r} latest`         |
 
 #### Types of variables
 
-As we can see above, this dataset contains 31 variables. We wont present each and every one of them but only those that seem relevant for our research. 
+As we can see above, this dataset contains 31 variables. We wont present each and every one of them but only those that seem relevant for our research.
 
-| Variables              | Type                                          |
-|------------------------|-----------------------------------------------|
-|  id                    | `{r} typeof(mass_mob$id)`                     |
-|  country               | `{r} typeof(mass_mob$country)`                |
-| protestnumber          | `{r} typeof(mass_mob$protestnumber)`          |
-| protesterviolence      | `{r} typeof(mass_mob$protestviolence)`        |
-| participants_category  | `{r} typeof(mass_mob$participants_category)`  |
-| stateresponse1         | `{r} typeof(mass_mob$stateresponse1)`         |
-
+| Variables             | Type                                         |
+|-----------------------|----------------------------------------------|
+| id                    | `{r} typeof(mass_mob$id)`                    |
+| country               | `{r} typeof(mass_mob$country)`               |
+| protestnumber         | `{r} typeof(mass_mob$protestnumber)`         |
+| protesterviolence     | `{r} typeof(mass_mob$protestviolence)`       |
+| participants_category | `{r} typeof(mass_mob$participants_category)` |
+| stateresponse1        | `{r} typeof(mass_mob$stateresponse1)`        |
 
 #### Variable description
 
-| Variables              | Description                                   |
-|------------------------|-----------------------------------------------|
-|  id                    |     unique protest identifier                 |
-|  country               |     Country of the protest                    |
-| protestnumber          |     Number of the protest in this year        |
-| protesterviolence      |     Whether the movement used violence        |
-| participants_category  |     Categories summarizing  the magnitude of the movement  |
-| stateresponse1         |     How the governing powers reacted to the protests   |
+| Variables | Description |
+|-------------------------|-----------------------------------------------|
+| id | Unique protest identifier |
+| country | Country of the protest |
+| protestnumber | Number of the protest in this year |
+| protesterviolence | Whether the movement used violence |
+| participants_category | Categories summarizing the magnitude of the movement |
+| stateresponse1 | How the governing powers reacted to the protests |
 
+### Creating a clean version
 
-### Protest = 0
-
-### Dates
+We can create a new dataset trying to go around all the NA cells and non ergonomic sides of the dataset.
 
 We can start by adding a column regrouping the dates' information The goal is to get two additional columns : startdate and enddate.
 
+We can also take of the particpants category because it is unusable and might not be relevant to our research.
+
+The counting in this dataset is far from optimal, and there was also the option that a protest = 0, only reporting that there were no mass mobilization that year in this country.
+
 ```{r}
-mutate(mass_mob, 
-       startdate=as.Date(paste(startyear,startmonth, startday, sep="-")),
-       enddate=as.Date(paste(endyear, endmonth, endday, sep = "-")))
+filter(mass_mob, protest==0)|>
+  nrow()
 ```
 
-### Counting
+This is the number of rows where there was no protests in the country. We can take this line off.
 
-## Second Dataset : Harvard's non violent and violent campaigns and outcomes (NAVCO)
+```{r}
+mm_clean <- mass_mob |>
+  filter(protest==1) |>
+  mutate(startdate=as.Date(paste(startyear,startmonth, startday, sep="-")),
+       enddate=as.Date(paste(endyear, endmonth, endday, sep = "-"))) |>
+  select(id, country, ccode, year, region, protestnumber, startyear, startdate, endyear,enddate, protesterviolence, protesterdemand1, stateresponse1)
+  
+```
+
+### Graphical representations
+
+Let's try to get an idea of the data in this dataframe, although, the qunatity of NA data might interfere.
+
+#### Countries with the most mobilizations
+
+```{r}
+mass_mob|>
+  summarise(nbprotest=sum(protest), .by = country)|>
+  slice_max(nbprotest, n=15) |>
+  ggplot(aes(x=reorder(country,nbprotest), y=nbprotest))+
+  geom_col()+
+  coord_flip()+
+  labs(x="Number of protests", y="Countries")
+```
+
+#### Countries with the least mobilizations
+
+```{r}
+mass_mob|>
+  summarise(nbprotest=sum(protest), .by = country)|>
+  slice_min(nbprotest, n=15) |>
+  ggplot(aes(x=reorder(country,nbprotest, decreasing=TRUE), y=nbprotest))+
+  geom_col()+
+  coord_flip() +
+  labs(x="Number of protests", y="Countries")
+```
+
+#### Countries with most violent protests
+
+```{r}
+mass_mob|>
+  filter(protesterviolence==1)|>
+  summarise(nbprotest=sum(protest), .by = country)|>
+  slice_max(nbprotest, n=15) |>
+  ggplot(aes(x=reorder(country,nbprotest), y=nbprotest))+
+  geom_col()+
+  coord_flip()+
+  labs(x="Number of protests", y="Countries")
+```
+
+# Second Dataset : Harvard's non violent and violent campaigns and outcomes (NAVCO)
+
+This datasets describes 622 campaigns and simply look at if they were violent or not, a success or not and finally if they ended with a regime change.
 
 This dataset was available to download in .xlsx format which seemed a bit too complicated to navigate for us, plus we also thought it would be simpler to have all our datasets in the same format.
 
 To convert to .csv we used an online converter (Convertio).
 
 ```{r}
+#| message: false
 navco_df<- vroom(here("data", "NAVCO-1.3-List.csv"))
 ```
 
 Let's first notice there are only two variables in this dataset that as N/A values, each where they represent less that 1%.
 
-### Description of the dataset
+## Description of the dataset
 
-#### Number of observations and variables 
+### Number of observations and variables
 
 ```{r}
 countries<- dplyr::n_distinct(navco_df$LOCATION)
@@ -109,59 +201,85 @@ earliest <- min(navco_df$BYEAR)
 latest <-max(navco_df$EYEAR)
 ```
 
+|                        |                      |
+|------------------------|----------------------|
+| Number of variables    | `{r} ncol(navco_df)` |
+| Number of observations | `{r} nrow(navco_df)` |
+| Number of countries    | `{r} countries`      |
+| Earliest year          | `{r} earliest`       |
+| Latest year            | `{r} latest`         |
 
-|                         |                         |
-|-------------------------|-------------------------|
-| Number of variables     |   `{r} ncol(navco_df)`  |
-| Number of observations  |   `{r} nrow(navco_df)`  |
-| Number of countries     |   `{r} countries`       |
-| Earliest year           |   `{r} earliest`        | 
-| Latest year             |   `{r} latest`          |
+### Types of variables
 
+| Variables | Type                             |
+|-----------|----------------------------------|
+| NAVCOID   | `{r} typeof(navco_df$NAVCOID)`   |
+| CAMPAIGN  | `{r} typeof(navco_df$CAMPAIGN)`  |
+| LOCATION  | `{r} typeof(navco_df$LOCATION)`  |
+| SUCCESS   | `{r} typeof(navco_df$SUCCESS)`   |
+| FAILURE   | `{r} typeof(navco_df$FAILURE)`   |
+| VIOL      | `{r} typeof(navco_df$VIOL)`      |
+| NONVIOL   | `{r} typeof(navco_df$NONVIOL)`   |
+| REGCHANGE | `{r} typeof(navco_df$REGCHANGE)` |
 
+### Variable description
 
-#### Types of variables
+| Variables | Description                                |
+|-----------|--------------------------------------------|
+| NAVCOID   | Unique number of the protest               |
+| CAMPAIGN  | The context/revendications of the protests |
+| LOCATION  | Country of the protest                     |
+| SUCCESS   | If it was succesful                        |
+| FAILURE   | If it wasn't successful                    |
+| VIOL      | Whether the protest was violent            |
+| NONVIOL   | Whether the protest was nonviolent         |
+| REGCHANGE | Did the protest end up in a Regime change  |
 
-| Variables              | Type                                          |
-|------------------------|-----------------------------------------------|
-|  NAVCOID               | `{r} typeof(navco_df$NAVCOID)`                |
-|  CAMPAIGN              | `{r} typeof(navco_df$CAMPAIGN)`               |
-|  LOCATION              | `{r} typeof(navco_df$LOCATION)`               |
-|  SUCCESS               | `{r} typeof(navco_df$SUCCESS)`                |
-|  FAILURE               | `{r} typeof(navco_df$FAILURE)`                |
-|  VIOL                  | `{r} typeof(navco_df$VIOL)`                   |
-|  NONVIOL               | `{r} typeof(navco_df$NONVIOL)`                |
-|  REGCHANGE             | `{r} typeof(navco_df$REGCHANGE)`              |
+It could be interesting to alleviate the datasets in order to get more comprehensive datasets with less NA data. For example, here we could remove one of the VIOL or NONVIOL variable as they are complementary : when VIOL=1, NONVIOL=0 and vice versa.
 
-#### Variable description
+## Graphical Representations
 
-| Variables              | Description                                   |
-|------------------------|-----------------------------------------------|
-|  NAVCOID               |                 |
-|  CAMPAIGN              |                |
-|  LOCATION              |                |
-|  SUCCESS               |                 |
-|  FAILURE               |                |
-|  VIOL                  |                   |
-|  NONVIOL               |                |
-|  REGCHANGE             |              |
+### Countries where protests were the most successful
 
-## Third Dataset : ACLED's
+```{r}
+navco_df |> 
+  summarise(successes=sum(SUCCESS), .by = LOCATION)|>
+  slice_max(successes,n=10)|>
+  ggplot(aes(x=reorder(LOCATION, successes), y = successes)) +
+  geom_col()+
+  coord_flip()+
+  labs(x="successes", y="Countries")
+```
 
-This dataset contains information on the number of protests and violent demonstrations per country per year. 
+### Average successes in the past years
+
+```{r}
+navco_df |>
+  summarise(yearly_successes=sum(SUCCESS), .by = EYEAR)|>
+  ggplot(aes(x=EYEAR, y=yearly_successes))+
+  geom_line()+
+  geom_point()+
+  scale_x_continuous(breaks = seq(1902, 2019, by =10)) 
+  
+```
+
+# Third Dataset : ACLED's
+
+This dataset contains information on the number of protests and violent demonstrations per country per year.
 
 This dataset was also available to download as an excel file (.xlsx). Thus, following the same logic as for the NAVCO dataset, we used Convertio to convert it into a .csv file.
 
 ```{r}
+#| message: false
 acled_df<- vroom(here("data", "acled.csv"))
 colnames(acled_df)
 ```
 
 This data is already in a tidy format enabling us to clearly observe the evolution of the amount of demonstrations in each country accross the years.
 
-### Description of the dataset
+## Description of the dataset
 
-#### Number of observations and variables
+### Number of observations and variables
 
 ```{r}
 
@@ -178,17 +296,17 @@ maximum <-  max(acled_df$YEAR)
 | Earliest year          | `{r} minimum`             |
 | Latest year            | `{r} maximum`             |
 
-#### Type and description of variables 
+### Type and description of variables
 
-| Variables | Type                           |Description |
-|-----------|--------------------------------|-------------|
-| COUNTRY   | `{r} typeof(acled_df$COUNTRY)` |Country of observation |
-| YEAR      | `{r} typeof(acled_df$YEAR)`    |Year of observation |
-| EVENTS    | `{r} typeof(acled_df$EVENTS)`  |Number of protests and violent demonstrations per country per year. This includes: Peaceful protests, Violent demonstration, Mob violence, Excessive force against protesters, Protest with intervention. |
+| Variables | Type | Description |
+|-----------------|---------------------------------------|-----------------|
+| COUNTRY | `{r} typeof(acled_df$COUNTRY)` | Country of observation |
+| YEAR | `{r} typeof(acled_df$YEAR)` | Year of observation |
+| EVENTS | `{r} typeof(acled_df$EVENTS)` | Number of protests and violent demonstrations per country per year. This includes: Peaceful protests, Violent demonstration, Mob violence, Excessive force against protesters, Protest with intervention. |
 
 Out of curiosity and to obtain a better understanding of the dataset, let us look at the countries and years with the most demonstration events versus least.
 
-### Ten highest amounts of demonstrations in a year
+Highest amounts of demonstrations in a year :
 
 ```{r}
 acled_df |>
@@ -197,7 +315,9 @@ acled_df |>
 
 The lowest amount of demonstrations that can be reached in a year, on the other hand, is zero.
 
-### Graphical representation
+## Graphical representations
+
+### Amount of demonstrations over the years
 
 To better understand the underlying trends of this dataset, let's plot the evolution of the amount of demonstrations over time. However, in order to do this, we need aggregate yearly data on the number of protests.
 
@@ -223,6 +343,8 @@ ggplot(aes(x = `YEAR`, y = `countries`)) +
 geom_line()
 ```
 
+### Countries with the highest protest average
+
 Finally let's look at the countries with the highest average amount of protests over the period.
 
 ```{r}
@@ -238,15 +360,14 @@ coord_flip()
 
 Once again, data to be analysed with caution beacause average data per country doesn't cover the same time frame.
 
-## Fourth Dataset : Episodes of regime transformation
+# Fourth Dataset : Episodes of regime transformation
 
 ```{r}
+#| message: false
 ert_df<-vroom(here("data","ert.csv"))
 ```
 
 In this dataset, many of the N/A values come from follow-up variables ie when there is before a binary variable such as democratization episode (dem_ep) and then if there is, what is its name (dem_ep_id). For obvious reason there isn't going to be a name if there isn't anything. So the value isn't missing, it's nothing.
-
-to make for an easier to use dataset, we need probably need to delete some columns that only come in handy with less than 15% of the recorded events.
 
 Instead, we could also separate the dataset in regards to if democratization or autocratization episodes were at play.
 
@@ -263,33 +384,37 @@ ert_dem <- ert_df |>
 
 ```
 
-### Dataset and variable description 
-The ert_dem dataset identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. With the ultimate objective being to determine whether  mass mobilization leads to political regime changes, we select a series of variables from this dataset whch will be useful for our analysis: 
+## Dataset and variable description
 
-| Variables | Description | Type        |
-|-----------|-------------|-------------|
-| country_id | V-Dem country identifier. | `{r} typeof(ert_df$country_id)` (integer, [3,236])|
-| country_text_id | V-Dem country identifier in text. |`{r} typeof(ert_df$country_text_id)`|
-| country_name | Full V-Dem country name. |`{r} typeof(ert_df$country_names)`|
-| year | Year of observation. |`{r} typeof(ert_df$year)` (integer, [1900,2025])|
-| v2x_regime | The regime type for the country-year according to Regimes of the World (4 values). |`{r} typeof(ert_df$v2x_regime)` (0 - closed autocracy, 1 - electoral autocracy, 2 - electoral democracy, 3 - liberal democracy) |
-| reg_type | Classifies whether the regime in that country-year is a democracy or autocracy. | `{r} typeof(ert_df$reg_type)` (0 - autocracy, 1 - democracy)|
-| v2x_polyarchy | Gives the country's score on the Electoral Democracy Index (EDI, V-DEM) in that year. |`{r} typeof(ert_df$v2x_polyarchy)` (interval [0,1])|
-| row_regch_event | Measures whether there was a regime change in that country-year according to Regimes of the World (not necessarily "genuine" = followed by elections) |`{r} typeof(ert_df$row_regch_event)` (-1 - change from democracy to autocracy, 0 - no regime change, 1 - change from autocracy to democracy) |
-| reg_trans |Measures whether there was a "genuine" regime change in that country-year.  |`{r} typeof(ert_df$reg_trans)` (-1 - democratic breakdown, 0 - no regime, 1 - democratic transition)|
-| reg_start_year,  | Determines the year a regime was founded (needed for the reg_type). |`{r} typeof(ert_df$reg_start_year)` (year, [1900,2025])|
-| dem_ep | Whether there is an ongoing democratic episode during the year in that country. |`{r} typeof(ert_df$dem_ep)` (dummy [0,1])|
-| dem_ep_start_year | Determines the year the democratic episode began. |`{r} typeof(ert_df$dem_ep_start_year)` (year, [1901,2025])|
-| aut_ep | Whether there is an ongoing autocratization episode during the year in that country. |`{r} typeof(ert_df$aut_ep)`(dummy [0,1])|
-| aut_ep_start_year | Determines the year the autocratization episode began. |`{r} typeof(ert_df$aut_ep_start_year)` (year, [1905,2025])|
+The ert_dem dataset identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. With the ultimate objective being to determine whether mass mobilization leads to political regime changes, we select a series of variables from this dataset which will be useful for our analysis:
 
-### Cleaning the dataset and variable modification: 
-The rest of the variables contained in the dataset are removed. This includes: episode description variables and outcome variables, the new dataset is called ert_df_clean: 
+| Variables | Description | Type |
+|----------------------|-------------------------|-------------------------|
+| country_id | V-Dem country identifier. | `{r} typeof(ert_df$country_id)` (integer, \[3,236\]) |
+| country_text_id | V-Dem country identifier in text. | `{r} typeof(ert_df$country_text_id)` |
+| country_name | Full V-Dem country name. | `{r} typeof(ert_df$country_names)` |
+| year | Year of observation. | `{r} typeof(ert_df$year)` (integer, \[1900,2025\]) |
+| v2x_regime | The regime type for the country-year according to Regimes of the World (4 values). | `{r} typeof(ert_df$v2x_regime)` (0 - closed autocracy, 1 - electoral autocracy, 2 - electoral democracy, 3 - liberal democracy) |
+| reg_type | Classifies whether the regime in that country-year is a democracy or autocracy. | `{r} typeof(ert_df$reg_type)` (0 - autocracy, 1 - democracy) |
+| v2x_polyarchy | Gives the country's score on the Electoral Democracy Index (EDI, V-DEM) in that year. | `{r} typeof(ert_df$v2x_polyarchy)` (interval \[0,1\]) |
+| row_regch_event | Measures whether there was a regime change in that country-year according to Regimes of the World (not necessarily "genuine" = followed by elections) | `{r} typeof(ert_df$row_regch_event)` (-1 - change from democracy to autocracy, 0 - no regime change, 1 - change from autocracy to democracy) |
+| reg_trans | Measures whether there was a "genuine" regime change in that country-year. | `{r} typeof(ert_df$reg_trans)` (-1 - democratic breakdown, 0 - no regime, 1 - democratic transition) |
+| reg_start_year, | Determines the year a regime was founded (needed for the reg_type). | `{r} typeof(ert_df$reg_start_year)` (year, \[1900,2025\]) |
+| dem_ep | Whether there is an ongoing democratic episode during the year in that country. | `{r} typeof(ert_df$dem_ep)` (dummy \[0,1\]) |
+| dem_ep_start_year | Determines the year the democratic episode began. | `{r} typeof(ert_df$dem_ep_start_year)` (year, \[1901,2025\]) |
+| aut_ep | Whether there is an ongoing autocratization episode during the year in that country. | `{r} typeof(ert_df$aut_ep)`(dummy \[0,1\]) |
+| aut_ep_start_year | Determines the year the autocratization episode began. | `{r} typeof(ert_df$aut_ep_start_year)` (year, \[1905,2025\]) |
+
+## Cleaning the dataset and variable modification:
+
+The rest of the variables contained in the dataset are removed. This includes: episode description variables and outcome variables, the new dataset is called ert_df_clean:
+
 ```{r}
 ert_df_clean <- ert_df |>
   select(country_id, country_text_id, country_name, year,v2x_regime, reg_type, v2x_polyarchy, row_regch_event, reg_trans, reg_start_year, dem_ep, dem_ep_start_year, aut_ep, aut_ep_start_year) 
 ```
-Note that the large portion of NA for the dem_ep_start_year and aut_ep_start_year indicate "non applicable" observations, i.e. that there is no episode associated with this particular observation. 
+
+Note that the large portion of NA for the dem_ep_start_year and aut_ep_start_year indicate "non applicable" observations, i.e. that there is no episode associated with this particular observation.
 
 Further, as our goal is to determine whether mass mobilization leads to changes in political regimes. Thus, we must modify the dem_ep and aut_ep variables so that they indicate the year the democratization or autocratization episode begins, as opposed to every year it lasts. These variables are particularly interesting for out analysis as they capture the movements towards or away from democratization/autocratization, without necessarily implying a regime switch (which are more rare).
 
@@ -301,7 +426,10 @@ ert_df_clean <- ert_df_clean |>
   )
 ```
 
-Our modified dataset has the following characteristics: 
+## Clean dataset characteristics
+
+Our modified dataset has the following characteristics:
+
 ```{r}
 number_of_countries <- dplyr::n_distinct(ert_df_clean$country_id)
 minimum_yr_ert <-  min(ert_df_clean$year)
@@ -316,12 +444,13 @@ maximum_yr_ert <-  max(ert_df_clean$year)
 | Earliest year          | `{r} minimum_yr_ert`      |
 | Latest year            | `{r} maximum_yr_ert`      |
 
-Given that our goal is to merge our four datasets into one general database, our datasets have to cover the same timespan. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1997-2019. Thus, I further restrict my database: 
+Given that our goal is to merge our four datasets into one general database, our datasets have to cover the same timespan. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1997-2019. Thus, I further restrict my database:
 
 ```{r}
 ert_df_clean <- ert_df_clean |>
   filter(year >= 1997, year <= 2019)
 ```
+
 
 Our new number of observations is: 
 
