@@ -25,9 +25,20 @@ In this project, we would like to try to answer the question :
 **Does mass mobilization lead to political regime changes, and to what extent are these results impacted by the nature of the mobilization (violent or non-violent)?**
 
 
-Looking for datasets on this topic was interesting and we found that Harvard produced two on the subject, along with pdf files explaining th
 
-Now regarding the datasets we found
+Looking for datasets on this topic was interesting and we found that Harvard produced two on the subject, along with pdf files explaining their approach and variables. 
+
+The first on is called **mass mobilization**. In this data set, they focus on mobilization against standing powers, government.That way, they also include the response opposed to these mobilizations.
+Here, mass mobilization corresponds to at least 50 persons. They used four major newspapers to base their research and they made the choice to exclude protests stemming from foreign policies or religious community. 
+
+The second Harvard dataset is called **NAVCO,for violent and non violent campaigns and outcome**. This data set offers informations that differ from the mass mobilization set. It specifies more context on the campaign and an array of binary variables. It covers data starting from 1900. And they intend to focus on maximalist campaigns, looking to overthrow governments or expel foreign military,separatism, self determination. 
+
+Then, we're using ACLED's data set 
+
+Finally, we have de **Episode of regime transformation** data set. This data set is truly filled to the brim with useful and precise info. 
+
+
+
 
 # Loading necessary things
 
