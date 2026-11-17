@@ -128,10 +128,9 @@ This is the number of rows where there was no protests in the country. We can ta
 
 ```{r}
 mm_clean <- mass_mob |>
-  filter(protest==1) |>
   mutate(startdate=as.Date(paste(startyear,startmonth, startday, sep="-")),
        enddate=as.Date(paste(endyear, endmonth, endday, sep = "-"))) |>
-  select(id, country, ccode, year, region, protestnumber, startyear, startdate, endyear,enddate, protesterviolence, protesterdemand1, stateresponse1)
+  select(id, country, ccode, year, region, protest, protestnumber, startyear, startdate, endyear,enddate, protesterviolence, protesterdemand1, stateresponse1)
   
 ```
 
