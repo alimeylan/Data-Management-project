@@ -872,7 +872,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">fill =</span> <span class="fu">factor</span>(row_regch_event))) <span class="sc">+</span></span>
 <span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span> </span>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Shift to autocracy"</span>, <span class="st">"Shift to democracy"</span>)) <span class="sc">+</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Number of regime changes"</span>, <span class="at">fill =</span> <span class="st">"Regime change"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_grey</span>(<span class="at">start =</span> <span class="fl">0.3</span>, <span class="at">end =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Number of regime changes"</span>, <span class="at">fill =</span> <span class="st">"Regime change"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Scale for fill is already present.
+Adding another scale for fill, which will replace the existing scale.</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -889,7 +894,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>Merging all our datasets into one</h1>
 <p>Now that we have analysed each dataset individually, we must merge them into one clean dataset in order to facilitate our econometric analysis in the next part of the project. Ideally, our final dataset contains one row per country-year with the number of protests/demonstrations in that country-year, the ERT data for that country-year (political regime, changes…), and whether the protests/demonstrations in that country/year were more violent or non-violent.</p>
 <p>This implies three key steps: 1 - Deciding which datasets / variables are useful. 2 - Matching the datasets in terms of time frame. 3 - Matching the datasets in terms of country coverage.</p>
-<p>1- A conclusion we can make from the dataset analysis above is that the Mass Mobilization and ACLED datasets measure very similar things: the number of protests per country-year. Thus, a choice must be made between these two datat sets</p>
+<p>1- A conclusion we can make from the dataset analysis above is that the Mass Mobilization and ACLED datasets measure very similar things: the number of protests per country-year. Thus, a choice must be made between these two datat sets.</p>
 <p>2 - To determine our period of analysis, we look at the dataset which starts the latest and the dataset which ends the earliest. In this way, we maje sure that we all our variables are available for the same period. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1997-2019.</p>
 <p>3 - The same logic applies to the country coverage. Not all datasets have observations for the same countries. Thus, we must determine which countries are in all datasets, and figure out a way to make these rows correspond through a common country code.</p>
 </section>
