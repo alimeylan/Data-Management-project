@@ -110,10 +110,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <section id="presenting-our-tentative-research-question-and-datasets" class="level1">
 <h1>Presenting our tentative research question and datasets</h1>
-<p>France has been seeing protests blossom for the last 3 months, first from high schoolers then students and finally these protests welcomed the gilets jaunes and demands about the cost of living.</p>
-<p>Violence has been a topic for these 3 months at protesters have been accused of making usage of it as well as police officers. Some demands are vividly critiquing the government and people holding power. More than a million people have been in the streets protesting, some of them asking for new kind of government. As it doesn’t seem to be coming, we are wondering on the conditions that make for regime change, for protesters being listened to.</p>
-<p>Seeing the current situation in France and the fact that our master is pretty politicized, we have been wondering about different collective actions and their impact. This question also touches on violence and its impact on the response.To study that there are multiple ways and variables we could look for and try to analyse.</p>
-<p>Stopping to protests and mass mobilization is a choice as they are not the only ways to express discontentment, analysing the results of boycott could be interesting as well, or petitions too. We could try to compare different collective action tools that are possible and that have been studied and/or used in the past.</p>
+<p>France has been seeing protests bloom for the past 3 months, first from high schoolers then students and finally these protests welcomed the gilets jaunes and demands about the cost of living.</p>
+<p>Violence has been a central topic for these 3 months as both protesters and police officers have been accused of making excessive use of it. Most demands are vividly criticizing the government and people holding power. More than a million people have been in the streets protesting, some of them asking for a new kind of government. As it doesn’t seem to be coming, questions arise on the conditions that make for regime change and for protesters to be listened to.</p>
+<p>Seeing the current situation in France and the fact that our master is pretty politicized, we have been wondering about different collective actions and their impact. This question also touches on violence and its impact on the response.To study that, there are multiple ways and variables we could look for and try to analyse.</p>
+<p>Limiting our analyis to protests and mass mobilization is a deliberate choice although they are not the only ways to express discontentment. For example, analysing the results of boycott could be interesting, or petitions too. We could try to compare different collective action tools that are possible and that have been studied and/or used in the past. However, with the data we have selected for our analysis, our scope remains limited to protests and demonstrations, and mass mobilization.</p>
 <p>Moreover, we also wish to put that in relation to the kind of regime these protests are opposing, are they democracies, autocracies, slipping from one to the other ? Is the regime using violence against the protesters ?</p>
 <p>It would be interesting to study and see which regime is more likely to see protests emerge. And how they respond to the demands</p>
 <p>Finally, we could study the different end scenarios ad even wonder which protests ended up with a regime change ? And how ?</p>
@@ -122,8 +122,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Looking for datasets on this topic was interesting and we found that Harvard produced two on the subject, along with pdf files explaining their approach and variables.</p>
 <p>The first on is called <strong>mass mobilization</strong>. In this data set, they focus on mobilization against standing powers, government.That way, they also include the response opposed to these mobilizations. Here, mass mobilization corresponds to at least 50 persons. They used four major newspapers to base their research and they made the choice to exclude protests stemming from foreign policies or religious community.</p>
 <p>The second Harvard dataset is called <strong>NAVCO,for violent and non violent campaigns and outcome</strong>. This data set offers informations that differ from the mass mobilization set. It specifies more context on the campaign and an array of binary variables. It covers data starting from 1900. And they intend to focus on maximalist campaigns, looking to overthrow governments or expel foreign military,separatism, self determination.</p>
-<p>Then, we’re using ACLED’s data set</p>
-<p>Finally, we have de <strong>Episode of regime transformation</strong> data set. This data set is truly filled to the brim with useful and precise info.</p>
+<p>Then, we’re using <strong>ACLED’s</strong> (Armed Conflict Location &amp; Event Data) data set which simply measures the number of protests and violent demonstrations per country per year. It is an independent, impartial global monitor that collects, analyses, and maps data on conflict and protest. We use their publically available aggregated data entitles “Number of demonstration events by country by year”.</p>
+<p>Finally, we have de <strong>Episode of regime transformation</strong> (ERT) data set. This data set identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened.</p>
 </section>
 <section id="loading-necessary-things" class="level1">
 <h1>Loading necessary things</h1>
@@ -352,7 +352,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>navco_df<span class="ot">&lt;-</span> <span class="fu">vroom</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"NAVCO-1.3-List.csv"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>Let’s first notice there are only two variables in this dataset that as N/A values, each where they represent less that 1%.</p>
+<p>Let’s first notice there are only two variables in this dataset that have N/A values, each where they represent less that 1%.</p>
 <section id="description-of-the-dataset-1" class="level2">
 <h2 class="anchored" data-anchor-id="description-of-the-dataset-1">Description of the dataset</h2>
 <section id="number-of-observations-and-variables-1" class="level3">
@@ -705,7 +705,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="dataset-and-variable-description" class="level2">
 <h2 class="anchored" data-anchor-id="dataset-and-variable-description">Dataset and variable description</h2>
-<p>The ert_dem dataset identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. With the ultimate objective being to determine whether mass mobilization leads to political regime changes, we select a series of variables from this dataset which will be useful for our analysis:</p>
+<p>The ert_df dataset identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. With the ultimate objective being to determine whether mass mobilization leads to political regime changes, we select a series of variables from this dataset which will be useful for our analysis:</p>
 <table class="caption-top table">
 <colgroup>
 <col style="width: 30%">
@@ -884,6 +884,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>This bar chart shows the number of regimes changes per year across all countries in the sample. The blue portion of the bars quantify the amount of changes from an autocracy to a democracy while the red portions show the amount of changes from a democracy to an autocracy. There is no particular noticeable pattern in the data.</p>
 </section>
 </section>
+</section>
+<section id="merging-all-our-datasets-into-one" class="level1">
+<h1>Merging all our datasets into one</h1>
+<p>Now that we have analysed each dataset individually, we must merge them into one clean dataset in order to facilitate our econometric analysis in the next part of the project. Ideally, our final dataset contains one row per country-year with the number of protests/demonstrations in that country-year, the ERT data for that country-year (political regime, changes…), and whether the protests/demonstrations in that country/year were more violent or non-violent.</p>
+<p>This implies three key steps: 1 - Deciding which datasets / variables are useful. 2 - Matching the datasets in terms of time frame. 3 - Matching the datasets in terms of country coverage.</p>
+<p>1- A conclusion we can make from the dataset analysis above is that the Mass Mobilization and ACLED datasets measure very similar things: the number of protests per country-year. Thus, a choice must be made between these two datat sets</p>
+<p>2 - To determine our period of analysis, we look at the dataset which starts the latest and the dataset which ends the earliest. In this way, we maje sure that we all our variables are available for the same period. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1997-2019.</p>
+<p>3 - The same logic applies to the country coverage. Not all datasets have observations for the same countries. Thus, we must determine which countries are in all datasets, and figure out a way to make these rows correspond through a common country code.</p>
 </section>
 
 </main>
