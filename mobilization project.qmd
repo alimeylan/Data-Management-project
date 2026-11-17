@@ -472,10 +472,20 @@ ert_df_clean |>
 This bar chart shows the number of regimes changes per year across all countries in the sample. The blue portion of the bars quantify the amount of changes from an autocracy to a democracy while the red portions show the amount of changes from a democracy to an autocracy. There is no particular noticeable pattern in the data.
 
 
+# Merging all our datasets into one 
+Now that we have analysed each dataset individually, we must merge them into one clean dataset in order to facilitate our econometric analysis in the next part of the project. 
+Ideally, our final dataset contains one row per country-year with the number of protests/demonstrations in that country-year, the ERT data for that country-year (political regime, changes...), and whether the protests/demonstrations in that country/year were more violent or non-violent. 
 
+This implies three key steps: 
+1 - Deciding which datasets / variables are useful. 
+2 - Matching the datasets in terms of time frame. 
+3 - Matching the datasets in terms of country coverage. 
 
+1- A conclusion we can make from the dataset analysis above is that the Mass Mobilization and ACLED datasets measure very similar things: the number of protests per country-year. Thus, a choice must be made between these two datat sets
 
+2 - To determine our period of analysis, we look at the dataset which starts the latest and the dataset which ends the earliest. In this way, we maje sure that we all our variables are available for the same period. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1997-2019. 
 
+3 - The same logic applies to the country coverage. Not all datasets have observations for the same countries. Thus, we must determine which countries are in all datasets, and figure out a way to make these rows correspond through a common country code. 
 
 
 
