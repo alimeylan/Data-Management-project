@@ -6,13 +6,13 @@ format:  html
 
 # Presenting our tentative research question and datasets
 
-France has been seeing protests blossom for the last 3 months, first from high schoolers then students and finally these protests welcomed the gilets jaunes and demands about the cost of living.
+France has been seeing protests bloom for the past 3 months, first from high schoolers then students and finally these protests welcomed the gilets jaunes and demands about the cost of living.
 
-Violence has been a topic for these 3 months at protesters have been accused of making usage of it as well as police officers. Some demands are vividly critiquing the government and people holding power. More than a million people have been in the streets protesting, some of them asking for new kind of government. As it doesn't seem to be coming, we are wondering on the conditions that make for regime change, for protesters being listened to.
+Violence has been a central topic for these 3 months as both protesters and police officers have been accused of making excessive use of it. Most demands are vividly criticizing the government and people holding power. More than a million people have been in the streets protesting, some of them asking for a new kind of government. As it doesn't seem to be coming, questions arise on the conditions that make for regime change and for protesters to be listened to.
 
-Seeing the current situation in France and the fact that our master is pretty politicized, we have been wondering about different collective actions and their impact. This question also touches on violence and its impact on the response.To study that there are multiple ways and variables we could look for and try to analyse.
+Seeing the current situation in France and the fact that our master is pretty politicized, we have been wondering about different collective actions and their impact. This question also touches on violence and its impact on the response.To study that, there are multiple ways and variables we could look for and try to analyse.
 
-Stopping to protests and mass mobilization is a choice as they are not the only ways to express discontentment, analysing the results of boycott could be interesting as well, or petitions too. We could try to compare different collective action tools that are possible and that have been studied and/or used in the past.
+Limiting our analyis to protests and mass mobilization is a deliberate choice although they are not the only ways to express discontentment. For example, analysing the results of boycott could be interesting, or petitions too. We could try to compare different collective action tools that are possible and that have been studied and/or used in the past. However, with the data we have selected for our analysis, our scope remains limited to protests and demonstrations, and mass mobilization.
 
 Moreover, we also wish to put that in relation to the kind of regime these protests are opposing, are they democracies, autocracies, slipping from one to the other ? Is the regime using violence against the protesters ?
 
@@ -33,9 +33,9 @@ Here, mass mobilization corresponds to at least 50 persons. They used four major
 
 The second Harvard dataset is called **NAVCO,for violent and non violent campaigns and outcome**. This data set offers informations that differ from the mass mobilization set. It specifies more context on the campaign and an array of binary variables. It covers data starting from 1900. And they intend to focus on maximalist campaigns, looking to overthrow governments or expel foreign military,separatism, self determination. 
 
-Then, we're using ACLED's data set 
+Then, we're using **ACLED's** (Armed Conflict Location & Event Data) data set which simply measures the number of protests and violent demonstrations per country per year. It is an independent, impartial global monitor that collects, analyses, and maps data on conflict and protest. We use their publically available aggregated data entitles "Number of demonstration events by country by year".
 
-Finally, we have de **Episode of regime transformation** data set. This data set is truly filled to the brim with useful and precise info. 
+Finally, we have de **Episode of regime transformation** (ERT) data set. This data set identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. 
 
 
 
@@ -188,7 +188,7 @@ To convert to .csv we used an online converter (Convertio).
 navco_df<- vroom(here("data", "NAVCO-1.3-List.csv"))
 ```
 
-Let's first notice there are only two variables in this dataset that as N/A values, each where they represent less that 1%.
+Let's first notice there are only two variables in this dataset that have N/A values, each where they represent less that 1%.
 
 ## Description of the dataset
 
@@ -385,7 +385,7 @@ ert_dem <- ert_df |>
 
 ## Dataset and variable description
 
-The ert_dem dataset identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. With the ultimate objective being to determine whether mass mobilization leads to political regime changes, we select a series of variables from this dataset which will be useful for our analysis:
+The ert_df dataset identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. With the ultimate objective being to determine whether mass mobilization leads to political regime changes, we select a series of variables from this dataset which will be useful for our analysis:
 
 | Variables | Description | Type |
 |----------------------|-------------------------|-------------------------|
@@ -450,10 +450,31 @@ ert_df_clean <- ert_df_clean |>
   filter(year >= 1997, year <= 2019)
 ```
 
-Our new number of observations is:
 
-|                        |                          |
-|------------------------|--------------------------|
-| Number of observations | `{r} nrow(ert_df_clean)` |
-| Earliest year          | 1997                     |
-| Latest year            | 2019                     |
+Our new number of observations is: 
+
+|                        |                           |
+|------------------------|---------------------------|
+| Number of observations | `{r} nrow(ert_df_clean)`  |
+| Earliest year          | 1997                      |
+| Latest year            | 2019                      |
+
+### Graphical representation 
+```{r}
+ert_df_clean |>
+  filter(row_regch_event != 0) |>
+  ggplot(aes(x = year, fill = factor(row_regch_event))) +
+  geom_bar() + 
+  scale_fill_discrete(labels = c("Shift to autocracy", "Shift to democracy")) +
+  labs(x = "Year", y = "Number of regime changes", fill = "Regime change")
+```
+This bar chart shows the number of regimes changes per year across all countries in the sample. The blue portion of the bars quantify the amount of changes from an autocracy to a democracy while the red portions show the amount of changes from a democracy to an autocracy. There is no particular noticeable pattern in the data.
+
+
+
+
+
+
+
+
+
