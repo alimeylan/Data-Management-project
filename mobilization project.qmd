@@ -484,6 +484,15 @@ This implies three key steps:
 
 1- A conclusion we can make from the dataset analysis above is that the Mass Mobilization and ACLED datasets measure very similar things: the number of protests per country-year. Thus, a choice must be made between these two datat sets. 
 
+```{r}
+mass_mob_cy <- mass_mob |>
+  summarise(
+    n_protests = sum(protest == 1, na.rm = TRUE),
+    .by = c(country, year)
+  )
+```
+
+
 2 - To determine our period of analysis, we look at the dataset which starts the latest and the dataset which ends the earliest. In this way, we maje sure that we all our variables are available for the same period. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1997-2019. 
 
 3 - The same logic applies to the country coverage. Not all datasets have observations for the same countries. Thus, we must determine which countries are in all datasets, and figure out a way to make these rows correspond through a common country code. 
