@@ -567,4 +567,47 @@ navco_cy_fil <- navco_cy_fil |>
   mutate(iso3 = countrycode(country, "country.name", "iso3c"))
 ```
 
+As Kosovo appears in all three waring messages we can manually create a code for it: 
+```{r}
+kosovo <- c("Kosovo" = "KOS")
 
+mm_cy_fil <- mm_cy_fil |>
+  mutate(iso3 = countrycode(country, "country.name", "iso3c", custom_match = kosovo))
+
+ert_fil <- ert_fil |>
+  mutate(iso3 = countrycode(country_name, "country.name", "iso3c", custom_match = kosovo))
+
+navco_cy_fil <- navco_cy_fil |>
+  mutate(iso3 = countrycode(country, "country.name", "iso3c", custom_match = kosovo))
+```
+Dropping NAs: 
+```{r}
+mm_cy_fil <- mm_cy_fil |> filter(!is.na(iso3))
+ert_fil <- ert_fil     |> filter(!is.na(iso3))
+navco_cy_fil <- navco_cy_fil    |> filter(!is.na(iso3))
+```
+
+```{r}
+mm_cy_fil |> count(iso3, year) |> filter(n > 1)
+ert_fil     |> count(iso3, year) |> filter(n > 1)
+navco_cy_fil    |> count(iso3, year) |> filter(n > 1)
+```
+
+In the ERT database, PSE (Palestine) is creating an error message because V-DEM seperates into two territories: Palestine/Gaza and Palestine/West Bank. Thus, we drop this country which is, in any case, non-present in the other datatsets. 
+```{r}
+ert_fil <- ert_fil |> filter(iso3 != "PSE")
+```
+
+The same applies for German data in 1990, where there is an issue because two observations appear in 1990. This is likely due the ongoing reunification process in Germany during that year. Thus, we sum the data for this year between the two territiories: 
+```{r}
+mm_cy_fil <- mm_cy_fil |>
+summarise(n_protests   = sum(n_protests),
+          .by = c(iso3, year))
+```
+
+We re-run the check: 
+```{r}
+mm_cy_fil |> count(iso3, year) |> filter(n > 1)
+ert_fil     |> count(iso3, year) |> filter(n > 1)
+navco_cy_fil    |> count(iso3, year) |> filter(n > 1)
+```
