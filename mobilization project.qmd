@@ -304,17 +304,6 @@ maximum <-  max(acled_df$YEAR)
 | YEAR | `{r} typeof(acled_df$YEAR)` | Year of observation |
 | EVENTS | `{r} typeof(acled_df$EVENTS)` | Number of protests and violent demonstrations per country per year. This includes: Peaceful protests, Violent demonstration, Mob violence, Excessive force against protesters, Protest with intervention. |
 
-Out of curiosity and to obtain a better understanding of the dataset, let us look at the countries and years with the most demonstration events versus least.
-
-Highest amounts of demonstrations in a year :
-
-```{r}
-acled_df |>
-  slice_max(`EVENTS`, n=10)
-```
-
-The lowest amount of demonstrations that can be reached in a year, on the other hand, is zero.
-
 ## Graphical representations
 
 ### Amount of demonstrations over the years
@@ -444,7 +433,7 @@ maximum_yr_ert <-  max(ert_df_clean$year)
 | Earliest year          | `{r} minimum_yr_ert`      |
 | Latest year            | `{r} maximum_yr_ert`      |
 
-Given that our goal is to merge our four datasets into one general database, our datasets have to cover the same timespan. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1997-2019. Thus, I further restrict my database:
+Given that our goal is to merge our four datasets into one general database, our datasets have to cover the same timespan. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus, for now, we limit our time frame of analysis to 1997-2019 (further reflexion on the time frame in part X). Thus, I further restrict my database:
 
 ```{r}
 ert_df_clean <- ert_df_clean |>
