@@ -4,6 +4,8 @@ author: "Alice MEYLAN, Juliana CAPITANACHI GAUTHY"
 format:  html
 ---
 
+Link to our Github repository: https://github.com/alimeylan/Data-Management-project.git
+
 # Presenting our tentative research question and datasets
 
 France has been seeing protests bloom for the past 3 months, first from high schoolers then students and finally these protests welcomed the gilets jaunes and demands about the cost of living.
@@ -29,13 +31,13 @@ In this project, we would like to try to answer the following question :
 Looking for datasets on this topic was interesting and we found that Harvard produced two on the subject, along with pdf files explaining their approach and variables. 
 
 The first on is called **mass mobilization**. In this data set, they focus on mobilization against standing powers, government. That way, they also include the response opposed to these mobilizations.
-Here, mass mobilization corresponds to at least 50 persons. They used four major newspapers to base their research and they made the choice to exclude protests stemming from foreign policies or religious community. 
+Here, mass mobilization corresponds to at least 50 persons. They used four major newspapers to base their research and they made the choice to exclude protests stemming from foreign policies or religious community. Link to this data set: https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/HTTWYL
 
-The second Harvard dataset is called **NAVCO,for violent and non violent campaigns and outcome**. This data set offers informations that differs from the mass mobilization set. It specifies more context on the campaign and an array of binary variables. It covers data starting from 1900. And they intend to focus on maximalist campaigns, looking to overthrow governments or expel foreign military,separatism, self determination. 
+The second Harvard dataset is called **NAVCO,for violent and non violent campaigns and outcome**. This data set offers informations that differs from the mass mobilization set. It specifies more context on the campaign and an array of binary variables. It covers data starting from 1900. And they intend to focus on maximalist campaigns, looking to overthrow governments or expel foreign military,separatism, self determination. Link to this dataset: https://dataverse.harvard.edu/dataverse/navco
 
-Then, we turn to **ACLED's** (Armed Conflict Location & Event Data) data set which simply measures the number of protests and violent demonstrations per country per year. It is an independent, impartial global monitor that collects, analyses, and maps data on conflicts and protest. We use their publicly available aggregated data entitled "Number of demonstration events by country by year".
+Then, we turn to **ACLED's** (Armed Conflict Location & Event Data) data set which simply measures the number of protests and violent demonstrations per country per year. It is an independent, impartial global monitor that collects, analyses, and maps data on conflicts and protest. We use their publicly available aggregated data entitled "Number of demonstration events by country by year". Link to this data set: https://acleddata.com/aggregated/number-demonstration-events-country-year 
 
-Finally, we have the **Episode of regime transformation** (ERT) data set. This data set identifies episodes of democratization and autocratization in V-Dem data sets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this data set will be key to determine which countries experienced regime changes and when these changes happened. 
+Finally, we have the **Episode of regime transformation** (ERT) data set. This data set identifies episodes of democratization and autocratization in V-Dem data sets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this data set will be key to determine which countries experienced regime changes and when these changes happened. Link to this data set: https://www.v-dem.net/data/ert-dataset/ 
 
 
 
