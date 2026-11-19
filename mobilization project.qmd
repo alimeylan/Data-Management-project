@@ -531,15 +531,15 @@ geom_col()
 :::
 :::::
 
-Clearly, the **Mass Mobiilization** dataset covers more countries over a large time frame. Further, when looking into the codebook of both datasets, it appears that **Mass Mobiilization** is considerably more precise in its definition of protests: 
+Clearly, the **Mass Mobiilization** dataset covers more countries over a larger time frame. Further, when looking into the codebook of both datasets, it appears that **Mass Mobiilization** is considerably more precise in its definition of protests: 
 
-- They are defined as a gathering of 50 or more people to make a demand for the government
+- They are defined as a gathering of 50 or more people making a demand for the government.
 
-- They must be targeted to the state or state policy. 
+- They must be aimed for the state or state policy. 
 
 - It captures only national initiatives of protesting targeted at home policies. 
 
-- It excludes protests for other motivations: inter-communal demonstrations (eg. religious)
+- It excludes protests for other motivations (eg. religious).
 
 As opposed to the **ACLED** dataset, this gives us access to very precise and targeted data which perfectly fits our analysis objectives: whether  politically-motivated protests lead to actual political changes. 
 

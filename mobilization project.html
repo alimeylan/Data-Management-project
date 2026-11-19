@@ -902,6 +902,79 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 <span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> <span class="fu">c</span>(country, year)</span>
 <span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>number_of_countries_mmcy <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">n_distinct</span>(mass_mob_cy<span class="sc">$</span>country)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>minimum_mmcy <span class="ot">&lt;-</span>  <span class="fu">min</span>(mass_mob_cy<span class="sc">$</span>year)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>maximum_mmcy <span class="ot">&lt;-</span>  <span class="fu">max</span>(mass_mob_cy<span class="sc">$</span>year)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 29%">
+<col style="width: 32%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th></th>
+<th>ACLED</th>
+<th>Mass Mobilization</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Number of observations</td>
+<td>2932</td>
+<td>4876</td>
+</tr>
+<tr class="even">
+<td>Number of countries</td>
+<td>183</td>
+<td>166</td>
+</tr>
+<tr class="odd">
+<td>Earliest year</td>
+<td>1997</td>
+<td>1990</td>
+</tr>
+<tr class="even">
+<td>Latest year</td>
+<td>2026</td>
+<td>2020</td>
+</tr>
+</tbody>
+</table>
+<div class="columns">
+<div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mobilization-project_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="mobilization-project_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+<p>Clearly, the <strong>Mass Mobiilization</strong> dataset covers more countries over a large time frame. Further, when looking into the codebook of both datasets, it appears that <strong>Mass Mobiilization</strong> is considerably more precise in its definition of protests:</p>
+<ul>
+<li><p>They are defined as a gathering of 50 or more people to make a demand for the government</p></li>
+<li><p>They must be targeted to the state or state policy.</p></li>
+<li><p>It captures only national initiatives of protesting targeted at home policies.</p></li>
+<li><p>It excludes protests for other motivations: inter-communal demonstrations (eg. religious)</p></li>
+</ul>
+<p>As opposed to the <strong>ACLED</strong> dataset, this gives us access to very precise and targeted data which perfectly fits our analysis objectives: whether politically-motivated protests lead to actual political changes.</p>
+<p>Thus, our explanatory variable will be entirely based on the <strong>Mass Mobilization</strong> data.</p>
 <p>2 - To determine our period of analysis, we look at the dataset which starts the latest and the dataset which ends the earliest. In this way, we maje sure that we all our variables are available for the same period. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1997-2019.</p>
 <p>3 - The same logic applies to the country coverage. Not all datasets have observations for the same countries. Thus, we must determine which countries are in all datasets, and figure out a way to make these rows correspond through a common country code.</p>
 </section>
