@@ -631,3 +631,9 @@ This is our final dataset with the following charactersitics:
 | Latest year            | `{r} max(final_ds$year)`                             |
 | Period covered         | `{r} max(final_ds$year) -min(final_ds$year) +1` years|
 
+It contains the following variables: `country_name`, `year`, `v2x regime`, `reg_type`, `v2x_polygarchy`, `row_regch_event`, `reg_trans`, `reg_start_year`, `dem_ep_new`, `aut_ep_new`, `iso3`, `n_protests`, `violent`, `nonviolent`.
+
+```{r}
+rm(ert_auto, ert_dem, navo_fil, final_ds_l1, mm_fil, navco_fil)
+```
+

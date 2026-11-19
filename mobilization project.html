@@ -1093,6 +1093,67 @@ To fix unmatched values, please use the `custom_match` argument. If you think th
 # ℹ 3 variables: iso3 &lt;chr&gt;, year &lt;dbl&gt;, n &lt;int&gt;</code></pre>
 </div>
 </div>
+<p>We can now proceed to the joining of tables:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>final_ds <span class="ot">&lt;-</span> <span class="fu">inner_join</span>(ert_fil, mm_cy_fil, <span class="at">by =</span> <span class="fu">join_by</span>(iso3, year),</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>                       <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">"_ert"</span>, <span class="st">"_mm"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(navco_cy_fil, <span class="at">by =</span> <span class="fu">join_by</span>(iso3, year),</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">"_ert"</span>, <span class="st">"_navco"</span>))<span class="sc">|&gt;</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>country, <span class="sc">-</span>country_text_id, <span class="sc">-</span>country_id, <span class="sc">-</span>dem_ep, <span class="sc">-</span>dem_ep_start_year, <span class="sc">-</span>aut_ep, <span class="sc">-</span>aut_ep_start_year)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This is our final dataset with the following charactersitics:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 69%">
+</colgroup>
+<tbody>
+<tr class="odd">
+<td>Number of variables</td>
+<td>14</td>
+</tr>
+<tr class="even">
+<td>Number of observations</td>
+<td>4695</td>
+</tr>
+<tr class="odd">
+<td>Number of countries</td>
+<td>160</td>
+</tr>
+<tr class="even">
+<td>Earliest year</td>
+<td>1990</td>
+</tr>
+<tr class="odd">
+<td>Latest year</td>
+<td>2019</td>
+</tr>
+<tr class="even">
+<td>Period covered</td>
+<td>30 years</td>
+</tr>
+</tbody>
+</table>
+<p>It contains the following variables: <code>country_name</code>, <code>year</code>, <code>v2x regime</code>, <code>reg_type</code>, <code>v2x_polygarchy</code>, <code>row_regch_event</code>, <code>reg_trans</code>, <code>reg_start_year</code>, <code>dem_ep_new</code>, <code>aut_ep_new</code>, <code>iso3</code>, <code>n_protests</code>, <code>violent</code>, <code>nonviolent</code>.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(ert_auto, ert_dem, navo_fil, final_ds_l1, mm_fil, navco_fil)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in rm(ert_auto, ert_dem, navo_fil, final_ds_l1, mm_fil, navco_fil):
+object 'navo_fil' not found</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in rm(ert_auto, ert_dem, navo_fil, final_ds_l1, mm_fil, navco_fil):
+object 'final_ds_l1' not found</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in rm(ert_auto, ert_dem, navo_fil, final_ds_l1, mm_fil, navco_fil):
+object 'mm_fil' not found</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in rm(ert_auto, ert_dem, navo_fil, final_ds_l1, mm_fil, navco_fil):
+object 'navco_fil' not found</code></pre>
+</div>
+</div>
 </section>
 
 </main>
