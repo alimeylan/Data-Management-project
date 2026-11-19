@@ -611,3 +611,23 @@ mm_cy_fil |> count(iso3, year) |> filter(n > 1)
 ert_fil     |> count(iso3, year) |> filter(n > 1)
 navco_cy_fil    |> count(iso3, year) |> filter(n > 1)
 ```
+We can now proceed to the joining of tables: 
+```{r}
+final_ds <- inner_join(ert_fil, mm_cy_fil, by = join_by(iso3, year),
+                       suffix = c("_ert", "_mm")) |>
+  left_join(navco_cy_fil, by = join_by(iso3, year),
+            suffix = c("_ert", "_navco"))|>
+  select(-country, -country_text_id, -country_id, -dem_ep, -dem_ep_start_year, -aut_ep, -aut_ep_start_year)
+```
+
+This is our final dataset with the following charactersitics: 
+
+|                        |                                                      |
+|------------------------|------------------------------------------------------|
+| Number of variables    | `{r} ncol(final_ds)`                                 |
+| Number of observations | `{r} nrow(final_ds)`                                 |
+| Number of countries    | `{r} n_distinct(final_ds$iso3)`                      |
+| Earliest year          | `{r} min(final_ds$year)`                             |
+| Latest year            | `{r} max(final_ds$year)`                             |
+| Period covered         | `{r} max(final_ds$year) -min(final_ds$year) +1` years|
+

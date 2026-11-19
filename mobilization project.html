@@ -991,6 +991,108 @@ Caused by warning:
 To fix unmatched values, please use the `custom_match` argument. If you think the default matching rules should be improved, please file an issue at https://github.com/vincentarelbundock/countrycode/issues</code></pre>
 </div>
 </div>
+<p>As Kosovo appears in all three waring messages we can manually create a code for it:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>kosovo <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"Kosovo"</span> <span class="ot">=</span> <span class="st">"KOS"</span>)</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>mm_cy_fil <span class="ot">&lt;-</span> mm_cy_fil <span class="sc">|&gt;</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iso3 =</span> <span class="fu">countrycode</span>(country, <span class="st">"country.name"</span>, <span class="st">"iso3c"</span>, <span class="at">custom_match =</span> kosovo))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `iso3 = countrycode(country, "country.name", "iso3c",
+  custom_match = kosovo)`.
+Caused by warning:
+! Some values were not matched unambiguously: Czechoslovakia, Germany East, Serbia and Montenegro, Yugoslavia
+To fix unmatched values, please use the `custom_match` argument. If you think the default matching rules should be improved, please file an issue at https://github.com/vincentarelbundock/countrycode/issues</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>ert_fil <span class="ot">&lt;-</span> ert_fil <span class="sc">|&gt;</span></span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iso3 =</span> <span class="fu">countrycode</span>(country_name, <span class="st">"country.name"</span>, <span class="st">"iso3c"</span>, <span class="at">custom_match =</span> kosovo))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `iso3 = countrycode(country_name, "country.name", "iso3c",
+  custom_match = kosovo)`.
+Caused by warning:
+! Some values were not matched unambiguously: German Democratic Republic, Somaliland, South Yemen, Zanzibar
+To fix unmatched values, please use the `custom_match` argument. If you think the default matching rules should be improved, please file an issue at https://github.com/vincentarelbundock/countrycode/issues</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>navco_cy_fil <span class="ot">&lt;-</span> navco_cy_fil <span class="sc">|&gt;</span></span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iso3 =</span> <span class="fu">countrycode</span>(country, <span class="st">"country.name"</span>, <span class="st">"iso3c"</span>, <span class="at">custom_match =</span> kosovo))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `iso3 = countrycode(country, "country.name", "iso3c",
+  custom_match = kosovo)`.
+Caused by warning:
+! Some values were not matched unambiguously: Yugoslavia
+To fix unmatched values, please use the `custom_match` argument. If you think the default matching rules should be improved, please file an issue at https://github.com/vincentarelbundock/countrycode/issues</code></pre>
+</div>
+</div>
+<p>Dropping NAs:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>mm_cy_fil <span class="ot">&lt;-</span> mm_cy_fil <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(iso3))</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>ert_fil <span class="ot">&lt;-</span> ert_fil     <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(iso3))</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>navco_cy_fil <span class="ot">&lt;-</span> navco_cy_fil    <span class="sc">|&gt;</span> <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(iso3))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>mm_cy_fil <span class="sc">|&gt;</span> <span class="fu">count</span>(iso3, year) <span class="sc">|&gt;</span> <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 1 × 3
+  iso3   year     n
+  &lt;chr&gt; &lt;dbl&gt; &lt;int&gt;
+1 DEU    1990     2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>ert_fil     <span class="sc">|&gt;</span> <span class="fu">count</span>(iso3, year) <span class="sc">|&gt;</span> <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 13 × 3
+   iso3   year     n
+   &lt;chr&gt; &lt;dbl&gt; &lt;int&gt;
+ 1 PSE    2007     2
+ 2 PSE    2008     2
+ 3 PSE    2009     2
+ 4 PSE    2010     2
+ 5 PSE    2011     2
+ 6 PSE    2012     2
+ 7 PSE    2013     2
+ 8 PSE    2014     2
+ 9 PSE    2015     2
+10 PSE    2016     2
+11 PSE    2017     2
+12 PSE    2018     2
+13 PSE    2019     2</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a>navco_cy_fil    <span class="sc">|&gt;</span> <span class="fu">count</span>(iso3, year) <span class="sc">|&gt;</span> <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 3
+# ℹ 3 variables: iso3 &lt;chr&gt;, year &lt;dbl&gt;, n &lt;int&gt;</code></pre>
+</div>
+</div>
+<p>In the ERT database, PSE (Palestine) is creating an error message because V-DEM seperates into two territories: Palestine/Gaza and Palestine/West Bank. Thus, we drop this country which is, in any case, non-present in the other datatsets.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>ert_fil <span class="ot">&lt;-</span> ert_fil <span class="sc">|&gt;</span> <span class="fu">filter</span>(iso3 <span class="sc">!=</span> <span class="st">"PSE"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The same applies for German data in 1990, where there is an issue because two observations appear in 1990. This is likely due the ongoing reunification process in Germany during that year. Thus, we sum the data for this year between the two territiories:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a>mm_cy_fil <span class="ot">&lt;-</span> mm_cy_fil <span class="sc">|&gt;</span></span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summarise</span>(<span class="at">n_protests   =</span> <span class="fu">sum</span>(n_protests),</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>          <span class="at">.by =</span> <span class="fu">c</span>(iso3, year))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We re-run the check:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>mm_cy_fil <span class="sc">|&gt;</span> <span class="fu">count</span>(iso3, year) <span class="sc">|&gt;</span> <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 3
+# ℹ 3 variables: iso3 &lt;chr&gt;, year &lt;dbl&gt;, n &lt;int&gt;</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>ert_fil     <span class="sc">|&gt;</span> <span class="fu">count</span>(iso3, year) <span class="sc">|&gt;</span> <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 3
+# ℹ 3 variables: iso3 &lt;chr&gt;, year &lt;dbl&gt;, n &lt;int&gt;</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>navco_cy_fil    <span class="sc">|&gt;</span> <span class="fu">count</span>(iso3, year) <span class="sc">|&gt;</span> <span class="fu">filter</span>(n <span class="sc">&gt;</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 0 × 3
+# ℹ 3 variables: iso3 &lt;chr&gt;, year &lt;dbl&gt;, n &lt;int&gt;</code></pre>
+</div>
+</div>
 </section>
 
 </main>
