@@ -10,17 +10,17 @@ France has been seeing protests bloom for the past 3 months, first from high sch
 
 Violence has been a central topic for these 3 months as both protesters and police officers have been accused of making excessive use of it. Most demands are vividly criticizing the government and people holding power. More than a million people have been in the streets protesting, some of them asking for a new kind of government. As it doesn't seem to be coming, questions arise on the conditions that make for regime change and for protesters to be listened to.
 
-Seeing the current situation in France and the fact that our master is pretty politicized, we have been wondering about different collective actions and their impact. This question also touches on violence and its impact on the response.To study that, there are multiple ways and variables we could look for and try to analyse.
+Seeing the current situation in France and the fact that our master is pretty politicized, we have been wondering about different collective actions and their impact. This question also touches on violence and its impact on the response. To study that, there are multiple ways and variables we could look for and try to analyse.
 
 Limiting our analyis to protests and mass mobilization is a deliberate choice although they are not the only ways to express discontentment. For example, analysing the results of boycott could be interesting, or petitions too. We could try to compare different collective action tools that are possible and that have been studied and/or used in the past. However, with the data we have selected for our analysis, our scope remains limited to protests and demonstrations, and mass mobilization.
 
 Moreover, we also wish to put that in relation to the kind of regime these protests are opposing, are they democracies, autocracies, slipping from one to the other ? Is the regime using violence against the protesters ?
 
-It would be interesting to study and see which regime is more likely to see protests emerge. And how they respond to the demands
+It would be interesting to study and see which regime is more likely to see protests emerge, and how they respond to the demands.
 
-Finally, we could study the different end scenarios ad even wonder which protests ended up with a regime change ? And how ?
+Finally, we could study the different end scenarios and even wonder which protests ended up with a regime change ? And how ?
 
-In this project, we would like to try to answer the question :
+In this project, we would like to try to answer the following question :
 
 **Does mass mobilization lead to political regime changes, and to what extent are these results impacted by the nature of the mobilization (violent or non-violent)?**
 
@@ -28,14 +28,14 @@ In this project, we would like to try to answer the question :
 
 Looking for datasets on this topic was interesting and we found that Harvard produced two on the subject, along with pdf files explaining their approach and variables. 
 
-The first on is called **mass mobilization**. In this data set, they focus on mobilization against standing powers, government.That way, they also include the response opposed to these mobilizations.
+The first on is called **mass mobilization**. In this data set, they focus on mobilization against standing powers, government. That way, they also include the response opposed to these mobilizations.
 Here, mass mobilization corresponds to at least 50 persons. They used four major newspapers to base their research and they made the choice to exclude protests stemming from foreign policies or religious community. 
 
-The second Harvard dataset is called **NAVCO,for violent and non violent campaigns and outcome**. This data set offers informations that differ from the mass mobilization set. It specifies more context on the campaign and an array of binary variables. It covers data starting from 1900. And they intend to focus on maximalist campaigns, looking to overthrow governments or expel foreign military,separatism, self determination. 
+The second Harvard dataset is called **NAVCO,for violent and non violent campaigns and outcome**. This data set offers informations that differs from the mass mobilization set. It specifies more context on the campaign and an array of binary variables. It covers data starting from 1900. And they intend to focus on maximalist campaigns, looking to overthrow governments or expel foreign military,separatism, self determination. 
 
-Then, we're using **ACLED's** (Armed Conflict Location & Event Data) data set which simply measures the number of protests and violent demonstrations per country per year. It is an independent, impartial global monitor that collects, analyses, and maps data on conflict and protest. We use their publically available aggregated data entitles "Number of demonstration events by country by year".
+Then, we turn to **ACLED's** (Armed Conflict Location & Event Data) data set which simply measures the number of protests and violent demonstrations per country per year. It is an independent, impartial global monitor that collects, analyses, and maps data on conflicts and protest. We use their publicly available aggregated data entitled "Number of demonstration events by country by year".
 
-Finally, we have de **Episode of regime transformation** (ERT) data set. This data set identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. 
+Finally, we have the **Episode of regime transformation** (ERT) data set. This data set identifies episodes of democratization and autocratization in V-Dem data sets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this data set will be key to determine which countries experienced regime changes and when these changes happened. 
 
 
 
@@ -59,14 +59,20 @@ library(countrycode)
 
 # First data Set : Harvard's mass mobilization
 
-This Harvard datasets describes about 15 thousands mass mobilization from all over the world, trying to take into account the number of protesters, their violence, demands and the response they got.
+This Harvard datasets describes about 15 thousands mass mobilizations from all over the world, trying to take into account the number of protesters, their violence, demands and the response they got.
 
 ```{r}
 #| message: false
 mass_mob<-vroom(here("data", "mmALL_073120_csv.csv"))
 ```
 
-Issues that have arisen : - A lot of missing data N/A - Start and end dates in a relatively complicated way (maybe we'll keep them that way and just add the dd/mm/yyyy version) - Inconsistent counting of protesters : from numbers to 1000s, +50 etc. and a tentative category that is incomplete.
+Issues that have arisen : 
+
+- A lot of missing data N/A 
+
+- Start and end dates in a relatively complicated way (maybe we'll keep them that way and just add the dd/mm/yyyy version) 
+
+- Inconsistent counting of protesters : from numbers to 1000s, +50 etc. and a tentative category that is incomplete.
 
 ### Description of the dataset
 
@@ -116,16 +122,8 @@ We can create a new dataset trying to go around all the NA cells and non ergonom
 
 We can start by adding a column regrouping the dates' information The goal is to get two additional columns : startdate and enddate.
 
-We can also take of the particpants category because it is unusable and might not be relevant to our research.
+We can also take of the participants category because it is unusable and might not be relevant to our research.
 
-The counting in this dataset is far from optimal, and there was also the option that a protest = 0, only reporting that there were no mass mobilization that year in this country.
-
-```{r}
-filter(mass_mob, protest==0)|>
-  nrow()
-```
-
-This is the number of rows where there was no protests in the country. We can take this line off. **pourquoi on crée ce dataset?**
 
 ```{r}
 mm_clean <- mass_mob |>
@@ -137,7 +135,7 @@ mm_clean <- mass_mob |>
 
 ### Graphical representations
 
-Let's try to get an idea of the data in this dataframe, although, the qunatity of NA data might interfere.
+Let's try to get an idea of the data in this data frame, although, the quantity of NA data might interfere.
 
 #### Countries with the most mobilizations
 
@@ -178,9 +176,9 @@ mass_mob|>
 
 # Second Dataset : Harvard's non violent and violent campaigns and outcomes (NAVCO)
 
-This datasets describes 622 campaigns and simply look at if they were violent or not, a success or not and finally if they ended with a regime change.
+This data set describes 622 campaigns and simply looks at if they were violent or not, a success or not, and finally if they ended with a regime change.
 
-This dataset was available to download in .xlsx format which seemed a bit too complicated to navigate for us, plus we also thought it would be simpler to have all our datasets in the same format.
+This data set was available to download in .xlsx format which seemed a bit too complicated to navigate for us, plus we also thought it would be simpler to have all our data sets in the same format.
 
 To convert to .csv we used an online converter (Convertio).
 
@@ -341,13 +339,13 @@ acled_df |>
 filter(!is.na(`YEAR`) & !is.na(`EVENTS`)) |>
   group_by(COUNTRY) |>
   summarise(average_events_by_country = mean(EVENTS)) |>
-  slice_max(average_events_by_country, n = 30) |>
+  slice_max(average_events_by_country, n = 10) |>
 ggplot(aes(x = `COUNTRY`, y = `average_events_by_country`)) +
 geom_col()+
 coord_flip()
 ```
 
-Once again, data to be analysed with caution beacause average data per country doesn't cover the same time frame.
+Once again, data to be analysed with caution because average data per country doesn't cover the same time frame.
 
 # Fourth Dataset : Episodes of regime transformation
 
@@ -356,9 +354,9 @@ Once again, data to be analysed with caution beacause average data per country d
 ert_df<-vroom(here("data","ert.csv"))
 ```
 
-In this dataset, many of the N/A values come from follow-up variables ie when there is before a binary variable such as democratization episode (dem_ep) and then if there is, what is its name (dem_ep_id). For obvious reason there isn't going to be a name if there isn't anything. So the value isn't missing, it's nothing.
+In this dataset, many of the N/A values come from follow-up variables ie. when there is before a binary variable such as democratization episode (dem_ep) and then if there is, what is its name (dem_ep_id). For obvious reason there isn't going to be a name if there isn't anything. So the value isn't missing, it's nothing.
 
-Instead, we could also separate the dataset in regards to if democratization or autocratization episodes were at play.
+Instead, we could also separate the data set in regards to if democratization or autocratization episodes were at play.
 
 ```{r}
 ert_auto <- ert_df |>
@@ -373,9 +371,9 @@ ert_dem <- ert_df |>
 
 ```
 
-## Dataset and variable description
+## Full dataset and variable description
 
-The ert_df dataset identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. With the ultimate objective being to determine whether mass mobilization leads to political regime changes, we select a series of variables from this dataset which will be useful for our analysis:
+The **ert_df** dataset identifies episodes of democratization and autocratization in V-Dem datasets. Data ranges from 1990 to 2025, including more than 680 episodes of regime transformations.The data contained in this dataset will be key to determine which countries experienced regime changes and when these changes happened. With the ultimate objective being to determine whether mass mobilization leads to political regime changes, we select a series of variables from this data set which will be useful for our analysis:
 
 | Variables | Description | Type |
 |----------------------|-------------------------|-------------------------|
@@ -396,7 +394,7 @@ The ert_df dataset identifies episodes of democratization and autocratization in
 
 ## Cleaning the dataset and variable modification:
 
-The rest of the variables contained in the dataset are removed. This includes: episode description variables and outcome variables, the new dataset is called ert_df_clean:
+The rest of the variables contained in the data set are removed. This includes: episode description variables and outcome variables, the new data set is called ert_df_clean:
 
 ```{r}
 ert_df_clean <- ert_df |>
@@ -415,7 +413,7 @@ ert_df_clean <- ert_df_clean |>
   )
 ```
 
-## Clean dataset characteristics
+## Clean data set characteristics
 
 Our modified dataset has the following characteristics:
 
@@ -433,7 +431,6 @@ maximum_yr_ert <-  max(ert_df_clean$year)
 | Earliest year          | `{r} minimum_yr_ert`      |
 | Latest year            | `{r} maximum_yr_ert`      |
 
-Given that our goal is to merge our four datasets into one general database, our datasets have to cover the same timespan. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus, for now, we limit our time frame of analysis to 1997-2019 (further reflexion on the time frame in part X). Thus, I further restrict my database:
 
 ### Graphical representation 
 ```{r}
@@ -449,7 +446,7 @@ This bar chart shows the number of regimes changes per year across all countries
 
 
 # Merging all our datasets into one 
-Now that we have analysed each dataset individually, we must merge them into one clean dataset in order to facilitate our econometric analysis in the next part of the project. 
+Now that we have analysed each data sets individually, we must merge them into one clean dataset in order to facilitate our econometric analysis in the next part of the project. 
 Ideally, our final dataset contains one row per country-year with the number of protests/demonstrations in that country-year, the ERT data for that country-year (political regime, changes...), and whether the protests/demonstrations in that country/year were more violent or non-violent. 
 
 This implies three key steps: 
@@ -488,24 +485,26 @@ maximum_mmcy <-  max(mass_mob_cy$year)
 ::: {.column width="50%"}
 ```{r}
 #| echo: false
-mass_mob_cy |>
-  group_by(year) |>
-   summarise(countries_mmcy = n_distinct(country)) |>
-ggplot(aes(x = `year`, y = `countries_mmcy`)) +
-geom_col()
-```
-:::
-
-::: {.column width="50%"}
-```{r}
-#| echo: false
 acled_df |>
   filter(!is.na(YEAR), !is.na(COUNTRY)) |>
   group_by(YEAR) |>
    summarise(countries = n_distinct(COUNTRY))|>
          
 ggplot(aes(x = `YEAR`, y = `countries`)) +
-geom_col()
+geom_col() +
+  labs(title="ACLED")
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+mass_mob_cy |>
+  group_by(year) |>
+   summarise(countries_mmcy = n_distinct(country)) |>
+ggplot(aes(x = `year`, y = `countries_mmcy`)) +
+geom_col()+
+  labs(title = "Mass Mobilization")
 ```
 :::
 :::::
@@ -526,7 +525,7 @@ Thus, our explanatory variable will be entirely based on the **Mass Mobilization
 
 **2-** To determine our period of analysis, we look at the dataset which starts the latest and the dataset which ends the earliest. In this way, we make sure that all our variables are available for the same period. The dataset which starts the latest is **Mass Mobilization** (mass_mob_cy) in 1990. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1990-2019. 
 
-First, let's  create a clean version of the ***NAVCO** dataset (as for **Mass Mobilization**) containing only one row per country-year which determines whether, on average, the protests in each year were mainly violent or non-violent: 
+First, let's  create a clean version of the **NAVCO** dataset (as for **Mass Mobilization**) containing only one row per country-year which determines whether, on average, the protests in each year were mainly violent or non-violent: 
 
 ```{r}
 navco_cy <- navco_df |>
@@ -536,12 +535,12 @@ navco_cy <- navco_df |>
     .by = c(LOCATION, BYEAR)
   ) |>
   mutate(
-    violent    = as.integer(n_violent > n_nonviolent),
-    nonviolent = as.integer(n_nonviolent > n_violent)
+    violent    = as.integer(n_violent >= n_nonviolent),
+    nonviolent = as.integer(n_nonviolent >= n_violent)
   ) |>
   select(LOCATION, BYEAR, violent, nonviolent)
 ```
-In this way, if a year was mainly violent it takes 1 for `violent` and 0 for `nonviolent`, and vice-versa. In the case of a mixed year (as much violence as not), both are equal to 0. 
+In this way, if a year was mainly violent it takes 1 for `violent` and 0 for `nonviolent`, and vice-versa. In the case of a mixed year (as much violence as not), both are equal to 1. 
 
 We restrict all our datasets to this time frame: 
 ```{r}
@@ -554,7 +553,7 @@ navco_cy_fil <- navco_cy |>
   filter(year >= 1990, year <= 2019)
 ```
 
-3 - The same logic applies to the country coverage. Not all datasets have observations for the same countries. Thus, we must determine which countries are in all datasets, and figure out a way to make these rows correspond through a common country code. 
+3 - The same logic applies to the country coverage. Not all data sets have observations for the same countries. Thus, we must determine which countries are in all data sets, and figure out a way to make these rows correspond through a common country code. 
 
 ```{r}
 mm_cy_fil <-mm_cy_fil |>
@@ -633,7 +632,8 @@ This is our final dataset with the following charactersitics:
 
 It contains the following variables: `country_name`, `year`, `v2x regime`, `reg_type`, `v2x_polygarchy`, `row_regch_event`, `reg_trans`, `reg_start_year`, `dem_ep_new`, `aut_ep_new`, `iso3`, `n_protests`, `violent`, `nonviolent`.
 
+Throughout our thinking process, we created some unecessary datasets for our final analysis (although insightful for a first approach) so we delete them using the command below: 
 ```{r}
-rm(ert_auto, ert_dem, navo_fil, final_ds_l1, mm_fil, navco_fil)
+rm(ert_auto, ert_dem, navo_fil, final_ds_l1, mm_fil, navco_fil, mm_clean)
 ```
 
