@@ -525,17 +525,33 @@ Thus, our explanatory variable will be entirely based on the **Mass Mobilization
 
 **2-** To determine our period of analysis, we look at the dataset which starts the latest and the dataset which ends the earliest. In this way, we make sure that all our variables are available for the same period. The dataset which starts the latest is **Mass Mobilization** (mass_mob_cy) in 1990. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1990-2019. 
 
+First, let's  create a clean version of the ***NAVCO** dataset (as for **Mass Mobilization**) containing only one row per country-year which determines whether, on average, the protests in each year were mainly violent or non-violent: 
+
+```{r}
+navco_cy <- navco_df |>
+  summarise(
+    n_violent    = sum(VIOL == 1, na.rm = TRUE),
+    n_nonviolent = sum(NONVIOL == 1, na.rm = TRUE),
+    .by = c(LOCATION, BYEAR)
+  ) |>
+  mutate(
+    violent    = as.integer(n_violent > n_nonviolent),
+    nonviolent = as.integer(n_nonviolent > n_violent)
+  ) |>
+  select(LOCATION, BYEAR, violent, nonviolent)
+```
+In this way, if a year was mainly violent it takes 1 for `violent` and 0 for `nonviolent`, and vice-versa. In the case of a mixed year (as much violence as not), both are equal to 0. 
+
 We restrict all our datasets to this time frame: 
 ```{r}
-mass_mob_cy |>
+mm_cy_fil <- mass_mob_cy |>
   filter(year>=1990, year <=2019)
-ert_df_clean|>
+ert_fil <- ert_df_clean|>
   filter(year>=1990, year <=2019)
-navco_df|>
-  filter(BYEAR>=1990, EYEAR <=2019)
+navco_cy_fil <- navco_cy |>
+  rename(country = LOCATION, year = BYEAR) |>
+  filter(year >= 1990, year <= 2019)
 ```
-
-
 
 
 3 - The same logic applies to the country coverage. Not all datasets have observations for the same countries. Thus, we must determine which countries are in all datasets, and figure out a way to make these rows correspond through a common country code. 
