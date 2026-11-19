@@ -272,13 +272,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code>[1] 1906</code></pre>
 </div>
 </div>
-<p>This is the number of rows where there was no protests in the country. We can take this line off.</p>
+<p>This is the number of rows where there was no protests in the country. We can take this line off. <strong>pourquoi on crée ce dataset?</strong></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>mm_clean <span class="ot">&lt;-</span> mass_mob <span class="sc">|&gt;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(protest<span class="sc">==</span><span class="dv">1</span>) <span class="sc">|&gt;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">startdate=</span><span class="fu">as.Date</span>(<span class="fu">paste</span>(startyear,startmonth, startday, <span class="at">sep=</span><span class="st">"-"</span>)),</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>       <span class="at">enddate=</span><span class="fu">as.Date</span>(<span class="fu">paste</span>(endyear, endmonth, endday, <span class="at">sep =</span> <span class="st">"-"</span>))) <span class="sc">|&gt;</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, country, ccode, year, region, protestnumber, startyear, startdate, endyear,enddate, protesterviolence, protesterdemand1, stateresponse1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">startdate=</span><span class="fu">as.Date</span>(<span class="fu">paste</span>(startyear,startmonth, startday, <span class="at">sep=</span><span class="st">"-"</span>)),</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>       <span class="at">enddate=</span><span class="fu">as.Date</span>(<span class="fu">paste</span>(endyear, endmonth, endday, <span class="at">sep =</span> <span class="st">"-"</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(id, country, ccode, year, region, protestnumber, startyear, startdate, endyear,enddate, protesterviolence, protesterdemand1, stateresponse1)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="graphical-representations" class="level3">
@@ -821,37 +820,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 <p>Given that our goal is to merge our four datasets into one general database, our datasets have to cover the same timespan. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus, for now, we limit our time frame of analysis to 1997-2019 (further reflexion on the time frame in part X). Thus, I further restrict my database:</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ert_df_clean <span class="ot">&lt;-</span> ert_df_clean <span class="sc">|&gt;</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1997</span>, year <span class="sc">&lt;=</span> <span class="dv">2019</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<p>Our new number of observations is:</p>
-<table class="caption-top table">
-<tbody>
-<tr class="odd">
-<td>Number of observations</td>
-<td>4090</td>
-</tr>
-<tr class="even">
-<td>Earliest year</td>
-<td>1997</td>
-</tr>
-<tr class="odd">
-<td>Latest year</td>
-<td>2019</td>
-</tr>
-</tbody>
-</table>
 <section id="graphical-representation" class="level3">
 <h3 class="anchored" data-anchor-id="graphical-representation">Graphical representation</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>ert_df_clean <span class="sc">|&gt;</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(row_regch_event <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">fill =</span> <span class="fu">factor</span>(row_regch_event))) <span class="sc">+</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span> </span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Shift to autocracy"</span>, <span class="st">"Shift to democracy"</span>)) <span class="sc">+</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_grey</span>(<span class="at">start =</span> <span class="fl">0.3</span>, <span class="at">end =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Number of regime changes"</span>, <span class="at">fill =</span> <span class="st">"Regime change"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>ert_df <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(row_regch_event <span class="sc">!=</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">fill =</span> <span class="fu">factor</span>(row_regch_event))) <span class="sc">+</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() <span class="sc">+</span> </span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_discrete</span>(<span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Shift to autocracy"</span>, <span class="st">"Shift to democracy"</span>)) <span class="sc">+</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_grey</span>(<span class="at">start =</span> <span class="fl">0.3</span>, <span class="at">end =</span> <span class="fl">0.6</span>, <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"Shift to autocracy"</span>, <span class="st">"Shift to democracy"</span>)) <span class="sc">+</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year"</span>, <span class="at">y =</span> <span class="st">"Number of regime changes"</span>, <span class="at">fill =</span> <span class="st">"Regime change"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Scale for fill is already present.
 Adding another scale for fill, which will replace the existing scale.</code></pre>
@@ -859,31 +837,34 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="mobilization-project_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="mobilization-project_files/figure-html/unnamed-chunk-25-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-<p>This bar chart shows the number of regimes changes per year across all countries in the sample. The blue portion of the bars quantify the amount of changes from an autocracy to a democracy while the red portions show the amount of changes from a democracy to an autocracy. There is no particular noticeable pattern in the data.</p>
+<p>This bar chart shows the number of regimes changes per year across all countries in the sample. The light portion of the bars quantify the amount of changes from an autocracy to a democracy while the dark portions show the amount of changes from a democracy to an autocracy. There seems to be an increase of the amount of regime changes between th 20th and 21st centuries, especially in terms of shifts to autocracy.</p>
 </section>
 </section>
 </section>
 <section id="merging-all-our-datasets-into-one" class="level1">
 <h1>Merging all our datasets into one</h1>
 <p>Now that we have analysed each dataset individually, we must merge them into one clean dataset in order to facilitate our econometric analysis in the next part of the project. Ideally, our final dataset contains one row per country-year with the number of protests/demonstrations in that country-year, the ERT data for that country-year (political regime, changes…), and whether the protests/demonstrations in that country/year were more violent or non-violent.</p>
-<p>This implies three key steps: 1 - Deciding which datasets / variables are useful. 2 - Matching the datasets in terms of time frame. 3 - Matching the datasets in terms of country coverage.</p>
-<p>1- A conclusion we can make from the dataset analysis above is that the Mass Mobilization and ACLED datasets measure very similar things: the number of protests per country-year. Thus, a choice must be made between these two datat sets.</p>
+<p>This implies three key steps:</p>
+<p>1 - Deciding which datasets / variables are useful.</p>
+<p>2 - Matching the datasets in terms of time frame.</p>
+<p>3 - Matching the datasets in terms of country coverage.</p>
+<p><strong>1-</strong> A conclusion we can make from the dataset analysis above is that the Mass Mobilization and ACLED datasets measure very similar things: the number of protests per country-year. Thus, a choice must be made between these two datat sets.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>mass_mob_cy <span class="ot">&lt;-</span> mass_mob <span class="sc">|&gt;</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_protests =</span> <span class="fu">sum</span>(protest <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> <span class="fu">c</span>(country, year)</span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>mass_mob_cy <span class="ot">&lt;-</span> mass_mob <span class="sc">|&gt;</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_protests =</span> <span class="fu">sum</span>(protest <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> <span class="fu">c</span>(country, year)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>number_of_countries_mmcy <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">n_distinct</span>(mass_mob_cy<span class="sc">$</span>country)</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>minimum_mmcy <span class="ot">&lt;-</span>  <span class="fu">min</span>(mass_mob_cy<span class="sc">$</span>year)</span>
-<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>maximum_mmcy <span class="ot">&lt;-</span>  <span class="fu">max</span>(mass_mob_cy<span class="sc">$</span>year)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>number_of_countries_mmcy <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">n_distinct</span>(mass_mob_cy<span class="sc">$</span>country)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>minimum_mmcy <span class="ot">&lt;-</span>  <span class="fu">min</span>(mass_mob_cy<span class="sc">$</span>year)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>maximum_mmcy <span class="ot">&lt;-</span>  <span class="fu">max</span>(mass_mob_cy<span class="sc">$</span>year)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <table class="caption-top table">
 <colgroup>
@@ -927,7 +908,7 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="mobilization-project_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="mobilization-project_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -937,7 +918,7 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="mobilization-project_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="mobilization-project_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
@@ -951,9 +932,72 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 <li><p>It captures only national initiatives of protesting targeted at home policies.</p></li>
 <li><p>It excludes protests for other motivations (eg. religious).</p></li>
 </ul>
-<p>As opposed to the <strong>ACLED</strong> dataset, this gives us access to very precise and targeted data which perfectly fits our analysis objectives: whether politically-motivated protests lead to actual political changes.</p>
-<p>Thus, our explanatory variable will be entirely based on the <strong>Mass Mobilization</strong> data.</p>
-<p>2 - To determine our period of analysis, we look at the dataset which starts the latest and the dataset which ends the earliest. In this way, we maje sure that we all our variables are available for the same period. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1997-2019.</p>
+<p>As opposed to the <strong>ACLED</strong> dataset, this gives us access to very precise and targeted data which perfectly fits our analysis objectives: whether politically-motivated protests lead to actual political changes. The period covered by <strong>Mass Mobilization</strong> is also signficantly larger.</p>
+<p>Thus, our explanatory variable will be entirely based on the <strong>Mass Mobilization</strong> data contained in the mass_mob_cy data set.</p>
+<p><strong>2-</strong> To determine our period of analysis, we look at the dataset which starts the latest and the dataset which ends the earliest. In this way, we make sure that all our variables are available for the same period. The dataset which starts the latest is <strong>Mass Mobilization</strong> (mass_mob_cy) in 1990. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1990-2019.</p>
+<p>We restrict all our datasets to this time frame:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>mass_mob_cy <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">1990</span>, year <span class="sc">&lt;=</span><span class="dv">2019</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 4,717 × 3
+   country  year n_protests
+   &lt;chr&gt;   &lt;dbl&gt;      &lt;int&gt;
+ 1 Canada   1990          6
+ 2 Canada   1991          2
+ 3 Canada   1992          1
+ 4 Canada   1993          2
+ 5 Canada   1994          2
+ 6 Canada   1995          2
+ 7 Canada   1996          1
+ 8 Canada   1997          2
+ 9 Canada   1998          0
+10 Canada   1999          0
+# ℹ 4,707 more rows</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>ert_df_clean<span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">1990</span>, year <span class="sc">&lt;=</span><span class="dv">2019</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 5,309 × 16
+   country_id country_text_id country_name  year v2x_regime reg_type
+        &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;
+ 1          3 MEX             Mexico        1990          1        0
+ 2          3 MEX             Mexico        1991          1        0
+ 3          3 MEX             Mexico        1992          1        0
+ 4          3 MEX             Mexico        1993          1        0
+ 5          3 MEX             Mexico        1994          1        0
+ 6          3 MEX             Mexico        1995          1        0
+ 7          3 MEX             Mexico        1996          2        1
+ 8          3 MEX             Mexico        1997          2        1
+ 9          3 MEX             Mexico        1998          2        1
+10          3 MEX             Mexico        1999          2        1
+# ℹ 5,299 more rows
+# ℹ 10 more variables: v2x_polyarchy &lt;dbl&gt;, row_regch_event &lt;dbl&gt;,
+#   reg_trans &lt;dbl&gt;, reg_start_year &lt;dbl&gt;, dem_ep &lt;dbl&gt;,
+#   dem_ep_start_year &lt;dbl&gt;, aut_ep &lt;dbl&gt;, aut_ep_start_year &lt;dbl&gt;,
+#   dem_ep_new &lt;lgl&gt;, aut_ep_new &lt;lgl&gt;</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>navco_df<span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(BYEAR<span class="sc">&gt;=</span><span class="dv">1990</span>, EYEAR <span class="sc">&lt;=</span><span class="dv">2019</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 283 × 16
+   NAVCOID CAMPAIGN  LOCATION BYEAR EYEAR TARGET SUCCESS LIMITED FAILURE ONGOING
+     &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
+ 1     218 Taliban/… Afghani…  1992  1996 Afgha…       1       0       0       0
+ 2     217 Taliban   Afghani…  2001  2019 Afgha…       0       0       1       1
+ 3     436 ISIS-Afg… Afghani…  2015  2019 Gov't…       0       0       1       1
+ 4       5 Albanian… Albania   1990  1991 Commu…       1       0       0       0
+ 5     563 Albanian… Albania   2019  2019 Rama …       0       0       1       1
+ 6     106 Islamic … Algeria   1992  2002 Alger…       0       0       1       0
+ 7     317 Anti-Abd… Algeria   2010  2012 Abdel…       0       1       0       0
+ 8     564 Smile Re… Algeria   2019  2019 Abdel…       1       0       0       0
+ 9     390 Cabinda … Angola    1991  2019 Govt …       0       0       1       1
+10     318 Armenian… Armenia   2007  2009 Gover…       0       1       0       0
+# ℹ 273 more rows
+# ℹ 6 more variables: VIOL &lt;dbl&gt;, NONVIOL &lt;dbl&gt;, FSELFDET &lt;dbl&gt;,
+#   REGCHANGE &lt;dbl&gt;, SECESSION &lt;dbl&gt;, OTHER &lt;dbl&gt;</code></pre>
+</div>
+</div>
 <p>3 - The same logic applies to the country coverage. Not all datasets have observations for the same countries. Thus, we must determine which countries are in all datasets, and figure out a way to make these rows correspond through a common country code.</p>
 </section>
 

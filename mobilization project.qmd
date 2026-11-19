@@ -124,11 +124,10 @@ filter(mass_mob, protest==0)|>
   nrow()
 ```
 
-This is the number of rows where there was no protests in the country. We can take this line off.
+This is the number of rows where there was no protests in the country. We can take this line off. **pourquoi on crée ce dataset?**
 
 ```{r}
 mm_clean <- mass_mob |>
-  filter(protest==1) |>
   mutate(startdate=as.Date(paste(startyear,startmonth, startday, sep="-")),
        enddate=as.Date(paste(endyear, endmonth, endday, sep = "-"))) |>
   select(id, country, ccode, year, region, protestnumber, startyear, startdate, endyear,enddate, protesterviolence, protesterdemand1, stateresponse1)
@@ -435,31 +434,17 @@ maximum_yr_ert <-  max(ert_df_clean$year)
 
 Given that our goal is to merge our four datasets into one general database, our datasets have to cover the same timespan. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus, for now, we limit our time frame of analysis to 1997-2019 (further reflexion on the time frame in part X). Thus, I further restrict my database:
 
-```{r}
-ert_df_clean <- ert_df_clean |>
-  filter(year >= 1997, year <= 2019)
-```
-
-
-Our new number of observations is: 
-
-|                        |                           |
-|------------------------|---------------------------|
-| Number of observations | `{r} nrow(ert_df_clean)`  |
-| Earliest year          | 1997                      |
-| Latest year            | 2019                      |
-
 ### Graphical representation 
 ```{r}
-ert_df_clean |>
+ert_df |>
   filter(row_regch_event != 0) |>
   ggplot(aes(x = year, fill = factor(row_regch_event))) +
   geom_bar() + 
   scale_fill_discrete(labels = c("Shift to autocracy", "Shift to democracy")) +
-  scale_fill_grey(start = 0.3, end = 0.6) +
+  scale_fill_grey(start = 0.3, end = 0.6, labels = c("Shift to autocracy", "Shift to democracy")) +
   labs(x = "Year", y = "Number of regime changes", fill = "Regime change")
 ```
-This bar chart shows the number of regimes changes per year across all countries in the sample. The blue portion of the bars quantify the amount of changes from an autocracy to a democracy while the red portions show the amount of changes from a democracy to an autocracy. There is no particular noticeable pattern in the data.
+This bar chart shows the number of regimes changes per year across all countries in the sample. The light portion of the bars quantify the amount of changes from an autocracy to a democracy while the dark portions show the amount of changes from a democracy to an autocracy. There seems to be an increase of the amount of regime changes between th 20th and 21st centuries, especially in terms of shifts to autocracy. 
 
 
 # Merging all our datasets into one 
@@ -467,11 +452,15 @@ Now that we have analysed each dataset individually, we must merge them into one
 Ideally, our final dataset contains one row per country-year with the number of protests/demonstrations in that country-year, the ERT data for that country-year (political regime, changes...), and whether the protests/demonstrations in that country/year were more violent or non-violent. 
 
 This implies three key steps: 
+
 1 - Deciding which datasets / variables are useful. 
+
 2 - Matching the datasets in terms of time frame. 
+
 3 - Matching the datasets in terms of country coverage. 
 
-1- A conclusion we can make from the dataset analysis above is that the Mass Mobilization and ACLED datasets measure very similar things: the number of protests per country-year. Thus, a choice must be made between these two datat sets. 
+
+**1-** A conclusion we can make from the dataset analysis above is that the Mass Mobilization and ACLED datasets measure very similar things: the number of protests per country-year. Thus, a choice must be made between these two datat sets. 
 
 ```{r}
 mass_mob_cy <- mass_mob |>
@@ -530,11 +519,24 @@ Clearly, the **Mass Mobiilization** dataset covers more countries over a larger 
 
 - It excludes protests for other motivations (eg. religious).
 
-As opposed to the **ACLED** dataset, this gives us access to very precise and targeted data which perfectly fits our analysis objectives: whether  politically-motivated protests lead to actual political changes. 
+As opposed to the **ACLED** dataset, this gives us access to very precise and targeted data which perfectly fits our analysis objectives: whether  politically-motivated protests lead to actual political changes. The period covered by **Mass Mobilization** is also signficantly larger.
 
-Thus, our explanatory variable will be entirely based on the **Mass Mobilization** data. 
+Thus, our explanatory variable will be entirely based on the **Mass Mobilization** data contained in the mass_mob_cy data set. 
 
-2 - To determine our period of analysis, we look at the dataset which starts the latest and the dataset which ends the earliest. In this way, we maje sure that we all our variables are available for the same period. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1997-2019. 
+**2-** To determine our period of analysis, we look at the dataset which starts the latest and the dataset which ends the earliest. In this way, we make sure that all our variables are available for the same period. The dataset which starts the latest is **Mass Mobilization** (mass_mob_cy) in 1990. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1990-2019. 
+
+We restrict all our datasets to this time frame: 
+```{r}
+mass_mob_cy |>
+  filter(year>=1990, year <=2019)
+ert_df_clean|>
+  filter(year>=1990, year <=2019)
+navco_df|>
+  filter(BYEAR>=1990, EYEAR <=2019)
+```
+
+
+
 
 3 - The same logic applies to the country coverage. Not all datasets have observations for the same countries. Thus, we must determine which countries are in all datasets, and figure out a way to make these rows correspond through a common country code. 
 
