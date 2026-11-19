@@ -54,6 +54,7 @@ library(ggplot2)
 library(dplyr)
 library(vroom)
 library(tidyr)
+library(countrycode)
 ```
 
 # First data Set : Harvard's mass mobilization
@@ -553,8 +554,17 @@ navco_cy_fil <- navco_cy |>
   filter(year >= 1990, year <= 2019)
 ```
 
-
 3 - The same logic applies to the country coverage. Not all datasets have observations for the same countries. Thus, we must determine which countries are in all datasets, and figure out a way to make these rows correspond through a common country code. 
 
+```{r}
+mm_cy_fil <-mm_cy_fil |>
+  mutate(iso3 = countrycode(country, "country.name", "iso3c"))
+
+ert_fil <- ert_fil |>
+  mutate(iso3 = countrycode(country_name, "country.name", "iso3c"))
+
+navco_cy_fil <- navco_cy_fil |>
+  mutate(iso3 = countrycode(country, "country.name", "iso3c"))
+```
 
 

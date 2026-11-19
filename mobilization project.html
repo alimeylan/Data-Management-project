@@ -135,7 +135,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vroom)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(countrycode)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="first-data-set-harvards-mass-mobilization" class="level1">
@@ -935,70 +936,61 @@ Adding another scale for fill, which will replace the existing scale.</code></pr
 <p>As opposed to the <strong>ACLED</strong> dataset, this gives us access to very precise and targeted data which perfectly fits our analysis objectives: whether politically-motivated protests lead to actual political changes. The period covered by <strong>Mass Mobilization</strong> is also signficantly larger.</p>
 <p>Thus, our explanatory variable will be entirely based on the <strong>Mass Mobilization</strong> data contained in the mass_mob_cy data set.</p>
 <p><strong>2-</strong> To determine our period of analysis, we look at the dataset which starts the latest and the dataset which ends the earliest. In this way, we make sure that all our variables are available for the same period. The dataset which starts the latest is <strong>Mass Mobilization</strong> (mass_mob_cy) in 1990. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1990-2019.</p>
+<p>First, let’s create a clean version of the *<strong>NAVCO</strong> dataset (as for <strong>Mass Mobilization</strong>) containing only one row per country-year which determines whether, on average, the protests in each year were mainly violent or non-violent:</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>navco_cy <span class="ot">&lt;-</span> navco_df <span class="sc">|&gt;</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_violent    =</span> <span class="fu">sum</span>(VIOL <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_nonviolent =</span> <span class="fu">sum</span>(NONVIOL <span class="sc">==</span> <span class="dv">1</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">.by =</span> <span class="fu">c</span>(LOCATION, BYEAR)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">violent    =</span> <span class="fu">as.integer</span>(n_violent <span class="sc">&gt;</span> n_nonviolent),</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">nonviolent =</span> <span class="fu">as.integer</span>(n_nonviolent <span class="sc">&gt;</span> n_violent)</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(LOCATION, BYEAR, violent, nonviolent)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>In this way, if a year was mainly violent it takes 1 for <code>violent</code> and 0 for <code>nonviolent</code>, and vice-versa. In the case of a mixed year (as much violence as not), both are equal to 0.</p>
 <p>We restrict all our datasets to this time frame:</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>mass_mob_cy <span class="sc">|&gt;</span></span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">1990</span>, year <span class="sc">&lt;=</span><span class="dv">2019</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 4,717 × 3
-   country  year n_protests
-   &lt;chr&gt;   &lt;dbl&gt;      &lt;int&gt;
- 1 Canada   1990          6
- 2 Canada   1991          2
- 3 Canada   1992          1
- 4 Canada   1993          2
- 5 Canada   1994          2
- 6 Canada   1995          2
- 7 Canada   1996          1
- 8 Canada   1997          2
- 9 Canada   1998          0
-10 Canada   1999          0
-# ℹ 4,707 more rows</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>ert_df_clean<span class="sc">|&gt;</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">1990</span>, year <span class="sc">&lt;=</span><span class="dv">2019</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 5,309 × 16
-   country_id country_text_id country_name  year v2x_regime reg_type
-        &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;        &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;
- 1          3 MEX             Mexico        1990          1        0
- 2          3 MEX             Mexico        1991          1        0
- 3          3 MEX             Mexico        1992          1        0
- 4          3 MEX             Mexico        1993          1        0
- 5          3 MEX             Mexico        1994          1        0
- 6          3 MEX             Mexico        1995          1        0
- 7          3 MEX             Mexico        1996          2        1
- 8          3 MEX             Mexico        1997          2        1
- 9          3 MEX             Mexico        1998          2        1
-10          3 MEX             Mexico        1999          2        1
-# ℹ 5,299 more rows
-# ℹ 10 more variables: v2x_polyarchy &lt;dbl&gt;, row_regch_event &lt;dbl&gt;,
-#   reg_trans &lt;dbl&gt;, reg_start_year &lt;dbl&gt;, dem_ep &lt;dbl&gt;,
-#   dem_ep_start_year &lt;dbl&gt;, aut_ep &lt;dbl&gt;, aut_ep_start_year &lt;dbl&gt;,
-#   dem_ep_new &lt;lgl&gt;, aut_ep_new &lt;lgl&gt;</code></pre>
-</div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>navco_df<span class="sc">|&gt;</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(BYEAR<span class="sc">&gt;=</span><span class="dv">1990</span>, EYEAR <span class="sc">&lt;=</span><span class="dv">2019</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 283 × 16
-   NAVCOID CAMPAIGN  LOCATION BYEAR EYEAR TARGET SUCCESS LIMITED FAILURE ONGOING
-     &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;    &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;
- 1     218 Taliban/… Afghani…  1992  1996 Afgha…       1       0       0       0
- 2     217 Taliban   Afghani…  2001  2019 Afgha…       0       0       1       1
- 3     436 ISIS-Afg… Afghani…  2015  2019 Gov't…       0       0       1       1
- 4       5 Albanian… Albania   1990  1991 Commu…       1       0       0       0
- 5     563 Albanian… Albania   2019  2019 Rama …       0       0       1       1
- 6     106 Islamic … Algeria   1992  2002 Alger…       0       0       1       0
- 7     317 Anti-Abd… Algeria   2010  2012 Abdel…       0       1       0       0
- 8     564 Smile Re… Algeria   2019  2019 Abdel…       1       0       0       0
- 9     390 Cabinda … Angola    1991  2019 Govt …       0       0       1       1
-10     318 Armenian… Armenia   2007  2009 Gover…       0       1       0       0
-# ℹ 273 more rows
-# ℹ 6 more variables: VIOL &lt;dbl&gt;, NONVIOL &lt;dbl&gt;, FSELFDET &lt;dbl&gt;,
-#   REGCHANGE &lt;dbl&gt;, SECESSION &lt;dbl&gt;, OTHER &lt;dbl&gt;</code></pre>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>mm_cy_fil <span class="ot">&lt;-</span> mass_mob_cy <span class="sc">|&gt;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">1990</span>, year <span class="sc">&lt;=</span><span class="dv">2019</span>)</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>ert_fil <span class="ot">&lt;-</span> ert_df_clean<span class="sc">|&gt;</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year<span class="sc">&gt;=</span><span class="dv">1990</span>, year <span class="sc">&lt;=</span><span class="dv">2019</span>)</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>navco_cy_fil <span class="ot">&lt;-</span> navco_cy <span class="sc">|&gt;</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">country =</span> LOCATION, <span class="at">year =</span> BYEAR) <span class="sc">|&gt;</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(year <span class="sc">&gt;=</span> <span class="dv">1990</span>, year <span class="sc">&lt;=</span> <span class="dv">2019</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>3 - The same logic applies to the country coverage. Not all datasets have observations for the same countries. Thus, we must determine which countries are in all datasets, and figure out a way to make these rows correspond through a common country code.</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>mm_cy_fil <span class="ot">&lt;-</span>mm_cy_fil <span class="sc">|&gt;</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iso3 =</span> <span class="fu">countrycode</span>(country, <span class="st">"country.name"</span>, <span class="st">"iso3c"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `iso3 = countrycode(country, "country.name", "iso3c")`.
+Caused by warning:
+! Some values were not matched unambiguously: Czechoslovakia, Germany East, Kosovo, Serbia and Montenegro, Yugoslavia
+To fix unmatched values, please use the `custom_match` argument. If you think the default matching rules should be improved, please file an issue at https://github.com/vincentarelbundock/countrycode/issues</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>ert_fil <span class="ot">&lt;-</span> ert_fil <span class="sc">|&gt;</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iso3 =</span> <span class="fu">countrycode</span>(country_name, <span class="st">"country.name"</span>, <span class="st">"iso3c"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `iso3 = countrycode(country_name, "country.name", "iso3c")`.
+Caused by warning:
+! Some values were not matched unambiguously: German Democratic Republic, Kosovo, Somaliland, South Yemen, Zanzibar
+To fix unmatched values, please use the `custom_match` argument. If you think the default matching rules should be improved, please file an issue at https://github.com/vincentarelbundock/countrycode/issues</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>navco_cy_fil <span class="ot">&lt;-</span> navco_cy_fil <span class="sc">|&gt;</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">iso3 =</span> <span class="fu">countrycode</span>(country, <span class="st">"country.name"</span>, <span class="st">"iso3c"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `iso3 = countrycode(country, "country.name", "iso3c")`.
+Caused by warning:
+! Some values were not matched unambiguously: Kosovo, Yugoslavia
+To fix unmatched values, please use the `custom_match` argument. If you think the default matching rules should be improved, please file an issue at https://github.com/vincentarelbundock/countrycode/issues</code></pre>
+</div>
+</div>
 </section>
 
 </main>
