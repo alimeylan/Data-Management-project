@@ -492,6 +492,58 @@ mass_mob_cy <- mass_mob |>
   )
 ```
 
+```{r}
+number_of_countries_mmcy <- dplyr::n_distinct(mass_mob_cy$country)
+minimum_mmcy <-  min(mass_mob_cy$year)
+maximum_mmcy <-  max(mass_mob_cy$year)
+```
+
+|                        |  ACLED                    | Mass Mobilization             |
+|------------------------|---------------------------|-------------------------------|
+| Number of observations | `{r} nrow(acled_df)`      |`{r} nrow(mass_mob_cy)`        |
+| Number of countries    | `{r} number_of_countries` |`{r} number_of_countries_mmcy` |
+| Earliest year          | `{r} minimum`             |`{r} minimum_mmcy`             |
+| Latest year            | `{r} maximum`             |`{r} maximum_mmcy`             |
+
+::::: columns
+::: {.column width="50%"}
+```{r}
+#| echo: false
+mass_mob_cy |>
+  group_by(year) |>
+   summarise(countries_mmcy = n_distinct(country)) |>
+ggplot(aes(x = `year`, y = `countries_mmcy`)) +
+geom_col()
+```
+:::
+
+::: {.column width="50%"}
+```{r}
+#| echo: false
+acled_df |>
+  filter(!is.na(YEAR), !is.na(COUNTRY)) |>
+  group_by(YEAR) |>
+   summarise(countries = n_distinct(COUNTRY))|>
+         
+ggplot(aes(x = `YEAR`, y = `countries`)) +
+geom_col()
+```
+:::
+:::::
+
+Clearly, the **Mass Mobiilization** dataset covers more countries over a large time frame. Further, when looking into the codebook of both datasets, it appears that **Mass Mobiilization** is considerably more precise in its definition of protests: 
+
+- They are defined as a gathering of 50 or more people to make a demand for the government
+
+- They must be targeted to the state or state policy. 
+
+- It captures only national initiatives of protesting targeted at home policies. 
+
+- It excludes protests for other motivations: inter-communal demonstrations (eg. religious)
+
+As opposed to the **ACLED** dataset, this gives us access to very precise and targeted data which perfectly fits our analysis objectives: whether  politically-motivated protests lead to actual political changes. 
+
+Thus, our explanatory variable will be entirely based on the **Mass Mobilization** data. 
 
 2 - To determine our period of analysis, we look at the dataset which starts the latest and the dataset which ends the earliest. In this way, we maje sure that we all our variables are available for the same period. The dataset which starts the latest is the ACLED dataset (acled_df) which begins in 1997. The dataset which finishes the earliest is NAVCO dataset (navco_df) which finishes in 2019. Thus our time frame of analysis is 1997-2019. 
 
